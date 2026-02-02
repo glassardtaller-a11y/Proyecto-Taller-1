@@ -135,7 +135,10 @@ export default function EmpleadosPage() {
                                     </div>
                                     <p className="text-sm text-foreground-muted">{employee.codigo}</p>
                                     <div className="mt-2">
-                                        <RoleBadge role={employee.rol} size="sm" />
+                                        <RoleBadge
+                                            role={employee.rol.toLowerCase() as 'admin' | 'registrador' | 'trabajador'}
+                                            size="sm"
+                                        />
                                     </div>
                                 </div>
                             </div>
