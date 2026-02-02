@@ -134,7 +134,6 @@ export default function EmpleadosPage() {
                                         />
                                     </div>
                                     <p className="text-sm text-foreground-muted">{employee.codigo}</p>
-                                    <p className="text-xs text-foreground-subtle truncate">{employee.email}</p>
                                     <div className="mt-2">
                                         <RoleBadge role={employee.rol} size="sm" />
                                     </div>
