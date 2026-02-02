@@ -6,9 +6,9 @@ import { UserRole } from '@/types';
 
 interface EmpleadoData {
     id: string;
+    auth_user_id: string;
+    username: string;
     nombre: string;
-    codigo: string;
-    email: string;
     rol: UserRole;
     activo: boolean;
 }
