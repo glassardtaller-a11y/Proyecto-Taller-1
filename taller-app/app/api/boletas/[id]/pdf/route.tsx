@@ -1,6 +1,6 @@
 export const runtime = 'nodejs';
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import {
   Document,
@@ -21,12 +21,8 @@ const styles = StyleSheet.create({
     fontSize: 8,
     fontFamily: 'Helvetica',
   },
-  center: {
-    textAlign: 'center',
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
+  center: { textAlign: 'center' },
+  bold: { fontWeight: 'bold' },
   line: {
     borderBottom: '1 solid #000',
     marginVertical: 4,
@@ -138,10 +134,11 @@ function BoletaPDF({
    API ROUTE
 ======================= */
 export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
+    const { id } = context.params;
     const supabase = createServerSupabaseClient();
 
     const { data: boleta, error } = await supabase
@@ -151,12 +148,12 @@ export async function GET(
         empleado:empleados(nombre,codigo),
         ciclo:ciclos(fecha_inicio,fecha_fin)
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !boleta) {
-      return NextResponse.json(
-        { error: 'Boleta no encontrada' },
+      return new Response(
+        JSON.stringify({ error: 'Boleta no encontrada' }),
         { status: 404 }
       );
     }
@@ -192,11 +189,10 @@ export async function GET(
       },
     });
 
-
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: 'Error al generar PDF' },
+    return new Response(
+      JSON.stringify({ error: 'Error al generar PDF' }),
       { status: 500 }
     );
   }
