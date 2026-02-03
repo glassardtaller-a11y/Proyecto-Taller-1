@@ -527,30 +527,15 @@ export default function PagosPage() {
                             // Find boleta for this ciclo
                             const boleta = boletas.find(b => b.ciclo_id === ciclo.id);
 
-                            const handleDownloadPDF = async () => {
+                            const handleDownloadPDF = () => {
                                 if (!boleta) {
                                     alert('No se encontró la boleta para este ciclo');
                                     return;
                                 }
 
-                                try {
-                                    const response = await fetch(`/api/boletas/${boleta.id}/pdf`);
-                                    if (!response.ok) throw new Error('Error al generar PDF');
-
-                                    const blob = await response.blob();
-                                    const url = window.URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = `boleta-${empleadoSeleccionado?.codigo}-${ciclo.fecha_fin}.pdf`;
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    document.body.removeChild(a);
-                                    window.URL.revokeObjectURL(url);
-                                } catch (err) {
-                                    console.error('Error downloading PDF:', err);
-                                    alert('Error al descargar PDF');
-                                }
+                                window.open(`/api/boletas/${boleta.id}/pdf`, '_blank');
                             };
+
 
                             return (
                                 <div key={ciclo.id} className="p-4 rounded-lg bg-glass border border-glass-border">

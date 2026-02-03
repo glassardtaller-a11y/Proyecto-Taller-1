@@ -185,7 +185,7 @@ export async function GET(
     return new Response(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="boleta-${boleta.empleado.codigo}.pdf"`,
+        'Content-Disposition': `attachment; filename="boleta-${boleta.empleado.codigo}-${boleta.ciclo.fecha_fin}.pdf"`,
       },
     });
 
