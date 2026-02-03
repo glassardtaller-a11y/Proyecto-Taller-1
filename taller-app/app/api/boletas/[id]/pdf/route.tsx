@@ -138,7 +138,7 @@ function BoletaPDF({
    API ROUTE
 ======================= */
 export async function GET(
-  request: NextRequest,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -146,13 +146,11 @@ export async function GET(
 
     const { data: boleta, error } = await supabase
       .from('boletas')
-      .select(
-        `
+      .select(`
         *,
         empleado:empleados(nombre,codigo),
         ciclo:ciclos(fecha_inicio,fecha_fin)
-      `
-      )
+      `)
       .eq('id', params.id)
       .single();
 
@@ -187,14 +185,7 @@ export async function GET(
       />
     );
 
-    const stream = new ReadableStream({
-      start(controller) {
-        controller.enqueue(new Uint8Array(pdfBuffer));
-        controller.close();
-      },
-    });
-
-    return new Response(stream, {
+    return new Response(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="boleta-${boleta.empleado.codigo}.pdf"`,
