@@ -130,6 +130,23 @@ function BoletaPDF({
   );
 }
 
+
+type BoletaConRelaciones = {
+  id: string;
+  empleado_id: string;
+  ciclo_id: string;
+  total_produccion: number;
+  total_neto: number;
+  empleado: {
+    nombre: string;
+    codigo: string;
+  } | null;
+  ciclo: {
+    fecha_inicio: string;
+    fecha_fin: string;
+  } | null;
+};
+
 /* =======================
    API ROUTE
 ======================= */
@@ -141,36 +158,65 @@ export async function GET(
     const { id } = await context.params;
     const supabase = createServerSupabaseClient();
 
-    const { data: boleta, error } = await supabase
+    const { data, error } = await supabase
       .from('boletas')
       .select(`
-        *,
-        empleado:empleados(nombre,codigo),
-        ciclo:ciclos(fecha_inicio,fecha_fin)
-      `)
+          id,
+          empleado_id,
+          ciclo_id,
+          total_produccion,
+          total_neto,
+          empleado:empleados(nombre,codigo),
+          ciclo:ciclos(fecha_inicio,fecha_fin)
+        `)
       .eq('id', id)
       .single();
 
-    if (error || !boleta) {
+    if (error || !data) {
       return new Response(
         JSON.stringify({ error: 'Boleta no encontrada' }),
         { status: 404 }
       );
     }
 
+    const boleta = data as unknown as BoletaConRelaciones;
+
+    if (!boleta.empleado || !boleta.ciclo) {
+      return new Response(
+        JSON.stringify({ error: 'Boleta incompleta (empleado o ciclo faltante)' }),
+        { status: 500 }
+      );
+    }
+
+    const fechaInicio: string = boleta.ciclo.fecha_inicio;
+    const fechaFin: string = boleta.ciclo.fecha_fin;
+    const codigoEmpleado: string = boleta.empleado.codigo;
+
+    const empleadoId = boleta.empleado_id;
+
+    if (!fechaInicio || !fechaFin || !codigoEmpleado) {
+      return new Response(
+        JSON.stringify({ error: 'Datos incompletos para generar PDF' }),
+        { status: 500 }
+      );
+    }
+
+
     const { data: producciones } = await supabase
       .from('produccion')
       .select('subtotal, tipo_trabajo(nombre)')
-      .eq('empleado_id', boleta.empleado_id)
-      .gte('fecha', boleta.ciclo.fecha_inicio)
-      .lte('fecha', boleta.ciclo.fecha_fin);
+      .eq('empleado_id', empleadoId)
+      .gte('fecha', fechaInicio)
+      .lte('fecha', fechaFin)
+
 
     const { data: movimientos } = await supabase
       .from('movimientos')
       .select('tipo, monto, signo')
-      .eq('empleado_id', boleta.empleado_id)
-      .gte('fecha', boleta.ciclo.fecha_inicio)
-      .lte('fecha', boleta.ciclo.fecha_fin);
+      .eq('empleado_id', empleadoId)
+      .gte('fecha', fechaInicio)
+      .lte('fecha', fechaFin)
+
 
     const pdfBuffer = await renderToBuffer(
       <BoletaPDF
@@ -182,10 +228,15 @@ export async function GET(
       />
     );
 
+    const fechaFinSafe = fechaFin;
+    const codigoEmpleadoSafe = codigoEmpleado;
+
+
+
     return new Response(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="boleta-${boleta.empleado.codigo}-${boleta.ciclo.fecha_fin}.pdf"`,
+        'Content-Disposition': `attachment; filename="boleta-${codigoEmpleadoSafe}-${fechaFinSafe}.pdf"`,
       },
     });
 
