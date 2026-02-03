@@ -1,6 +1,5 @@
 export const runtime = 'nodejs';
 
-import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateBoletaPDF } from '@/lib/supabase/pdf/boleta';
 
@@ -10,10 +9,10 @@ const supabaseService = createClient(
 );
 
 export async function GET(
-    _req: NextRequest,
-    { params }: { params: { id: string } }
+    request: Request,
+    context: { params: { id: string } }
 ) {
-    const boletaId = params.id;
+    const boletaId = context.params.id;
 
     // 1. Obtener boleta + relaciones
     const { data: boleta } = await supabaseService
@@ -36,7 +35,7 @@ export async function GET(
         );
     }
 
-    // 🔑 REUTILIZAMOS EXACTO LO QUE YA ESTÁ VERDE
+    // 👇 Reutilizamos lo que YA ESTÁ VERDE
     const ciclo: any = boleta.ciclo;
     const empleado: any = boleta.empleado;
 
@@ -89,3 +88,4 @@ export async function GET(
         { status: 200 }
     );
 }
+
