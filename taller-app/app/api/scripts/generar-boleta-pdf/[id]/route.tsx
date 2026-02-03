@@ -10,11 +10,10 @@ const supabaseService = createClient(
 
 export async function GET(
     request: Request,
-    context: { params: { id: string } }
+    { params }: { params: { id: string } }
 ) {
-    const boletaId = context.params.id;
+    const { id } = params;
 
-    // 1. Obtener boleta + relaciones
     const { data: boleta } = await supabaseService
         .from('boletas')
         .select(`
@@ -25,7 +24,7 @@ export async function GET(
       empleado:empleados(nombre, codigo),
       ciclo:ciclos(fecha_inicio, fecha_fin)
     `)
-        .eq('id', boletaId)
+        .eq('id', id)
         .single();
 
     if (!boleta || !boleta.empleado || !boleta.ciclo) {
@@ -35,14 +34,12 @@ export async function GET(
         );
     }
 
-    // 👇 Reutilizamos lo que YA ESTÁ VERDE
     const ciclo: any = boleta.ciclo;
     const empleado: any = boleta.empleado;
 
     const fecha_inicio = ciclo.fecha_inicio;
     const fecha_fin = ciclo.fecha_fin;
 
-    // 2. Producciones
     const { data: producciones } = await supabaseService
         .from('produccion')
         .select('subtotal, tipo_trabajo(nombre)')
@@ -50,7 +47,6 @@ export async function GET(
         .gte('fecha', fecha_inicio)
         .lte('fecha', fecha_fin);
 
-    // 3. Movimientos
     const { data: movimientos } = await supabaseService
         .from('movimientos')
         .select('tipo, monto, signo')
@@ -58,7 +54,6 @@ export async function GET(
         .gte('fecha', fecha_inicio)
         .lte('fecha', fecha_fin);
 
-    // 4. Generar PDF
     const pdfBuffer = await generateBoletaPDF({
         boleta,
         empleado,
@@ -67,7 +62,6 @@ export async function GET(
         movimientos: movimientos ?? [],
     });
 
-    // 5. Subir a Storage
     const pdfPath = `boletas/${boleta.id}.pdf`;
 
     await supabaseService.storage
@@ -77,7 +71,6 @@ export async function GET(
             upsert: true,
         });
 
-    // 6. Guardar path
     await supabaseService
         .from('boletas')
         .update({ pdf_path: pdfPath })
@@ -88,4 +81,3 @@ export async function GET(
         { status: 200 }
     );
 }
-
