@@ -1,14 +1,13 @@
 export const runtime = 'nodejs';
 
-import { NextRequest } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export async function GET(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  context: { params: { id: string } }
 ) {
   const supabase = createServerSupabaseClient();
-  const { id } = params;
+  const { id } = context.params;
 
   // 1. Buscar boleta y su pdf_path
   const { data: boleta, error } = await supabase
@@ -36,10 +35,10 @@ export async function GET(
     );
   }
 
-  // 3. Convertir Blob → ArrayBuffer
+  // 3. Blob → ArrayBuffer
   const arrayBuffer = await file.arrayBuffer();
 
-  // 4. Devolver PDF
+  // 4. Responder PDF
   return new Response(arrayBuffer, {
     headers: {
       'Content-Type': 'application/pdf',
