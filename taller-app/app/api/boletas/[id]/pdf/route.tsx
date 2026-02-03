@@ -135,10 +135,10 @@ function BoletaPDF({
 ======================= */
 export async function GET(
   _req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const supabase = createServerSupabaseClient();
 
     const { data: boleta, error } = await supabase
