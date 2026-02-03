@@ -4,12 +4,12 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params; // 👈 CLAVE
   const supabase = createServerSupabaseClient();
-  const { id } = context.params;
 
-  // 1. Buscar boleta y su pdf_path
+  // 1. Buscar boleta y pdf_path
   const { data: boleta, error } = await supabase
     .from('boletas')
     .select('pdf_path')
@@ -35,11 +35,10 @@ export async function GET(
     );
   }
 
-  // 3. Blob → ArrayBuffer
-  const arrayBuffer = await file.arrayBuffer();
+  const buffer = await file.arrayBuffer();
 
-  // 4. Responder PDF
-  return new Response(arrayBuffer, {
+  // 3. Devolver PDF
+  return new Response(buffer, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="boleta-${id}.pdf"`,
