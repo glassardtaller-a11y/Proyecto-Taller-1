@@ -10,14 +10,14 @@ export async function GET(
   const supabase = createServerSupabaseClient();
   const { id } = params;
 
-  // 1. Buscar boleta
+  // 1. Buscar boleta y su pdf_path
   const { data: boleta, error } = await supabase
     .from('boletas')
     .select('pdf_path')
     .eq('id', id)
     .single();
 
-  if (error || !boleta || !boleta.pdf_path) {
+  if (error || !boleta?.pdf_path) {
     return new Response(
       JSON.stringify({ error: 'PDF no disponible para esta boleta' }),
       { status: 404 }
@@ -36,12 +36,14 @@ export async function GET(
     );
   }
 
-  // 3. Devolver PDF
-  return new Response(file, {
+  // 3. Convertir Blob → ArrayBuffer
+  const arrayBuffer = await file.arrayBuffer();
+
+  // 4. Devolver PDF
+  return new Response(arrayBuffer, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': 'inline; filename="boleta.pdf"',
+      'Content-Disposition': `inline; filename="boleta-${id}.pdf"`,
     },
   });
 }
-
