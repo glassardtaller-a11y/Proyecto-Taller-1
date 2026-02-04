@@ -313,9 +313,26 @@ export function usePagos(): UsePagosReturn {
                 .limit(1)
                 .single();
 
-            const fechaInicio = ultimoCiclo?.fecha_fin
-                ? new Date(new Date(ultimoCiclo.fecha_fin).getTime() + 86400000).toISOString().split('T')[0]
-                : '2000-01-01';
+            let fechaInicio: string;
+
+            if (ultimoCiclo?.fecha_fin) {
+                fechaInicio = new Date(
+                    new Date(ultimoCiclo.fecha_fin).getTime() + 86400000
+                )
+                    .toISOString()
+                    .split('T')[0];
+            } else {
+                // buscar primera producción
+                const { data: primeraProd } = await supabase
+                    .from('produccion')
+                    .select('fecha')
+                    .eq('empleado_id', empleadoId)
+                    .order('fecha', { ascending: true })
+                    .limit(1)
+                    .single();
+
+                fechaInicio = primeraProd?.fecha ?? new Date().toISOString().split('T')[0];
+            }
 
             const fechaFin = new Date().toISOString().split('T')[0];
 
