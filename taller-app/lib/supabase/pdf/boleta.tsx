@@ -39,7 +39,7 @@ function BoletaPDF({
 
     return (
         <Document>
-            <Page size={[164, 'auto']} style={styles.page}>
+            <Page size={[164, 600]} style={styles.page}>
                 <Text style={[styles.center, styles.bold]}>TALLER</Text>
                 <Text style={[styles.center, styles.bold]}>BOLETA DE PAGO</Text>
                 <View style={styles.line} />
