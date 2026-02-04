@@ -1,5 +1,3 @@
-export const runtime = 'nodejs';
-
 import { createClient } from '@supabase/supabase-js';
 import { generateBoletaPDF } from '@/lib/supabase/pdf/boleta';
 
@@ -10,9 +8,9 @@ const supabaseService = createClient(
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = params;
+    const { id } = await params;
 
     const { data: boleta } = await supabaseService
         .from('boletas')
