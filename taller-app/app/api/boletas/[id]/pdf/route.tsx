@@ -1,15 +1,19 @@
 export const runtime = 'nodejs';
 
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params; // 👈 CLAVE
-  const supabase = createServerSupabaseClient();
+  const { id } = await context.params;
 
-  // 1. Buscar boleta y pdf_path
+  // 1. Buscar boleta
   const { data: boleta, error } = await supabase
     .from('boletas')
     .select('pdf_path')
@@ -23,25 +27,18 @@ export async function GET(
     );
   }
 
-  // 2. Descargar PDF desde Storage
-  const { data: file, error: fileError } = await supabase.storage
+  // 2. Generar URL firmada (MEJOR que download)
+  const { data, error: signError } = await supabase.storage
     .from('boletas')
-    .download(boleta.pdf_path);
+    .createSignedUrl(boleta.pdf_path, 300);
 
-  if (fileError || !file) {
+  if (signError || !data?.signedUrl) {
     return new Response(
-      JSON.stringify({ error: 'No se pudo descargar el PDF' }),
+      JSON.stringify({ error: 'No se pudo generar URL del PDF' }),
       { status: 500 }
     );
   }
 
-  const buffer = await file.arrayBuffer();
-
-  // 3. Devolver PDF
-  return new Response(buffer, {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="boleta-${id}.pdf"`,
-    },
-  });
+  // 3. Redireccionar al PDF
+  return Response.redirect(data.signedUrl);
 }
