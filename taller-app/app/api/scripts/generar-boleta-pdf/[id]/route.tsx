@@ -39,7 +39,7 @@ export async function GET(
 
     const { data: producciones } = await supabaseService
         .from('produccion')
-        .select('subtotal, tipo_trabajo(nombre)')
+        .select('subtotal, tipo_trabajo_id')
         .eq('empleado_id', boleta.empleado_id)
         .gte('fecha', fecha_inicio)
         .lte('fecha', fecha_fin);
