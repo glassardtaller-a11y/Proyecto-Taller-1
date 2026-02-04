@@ -1,3 +1,4 @@
+export const runtime = 'nodejs';
 import { createClient } from '@supabase/supabase-js';
 import { generateBoletaPDF } from '@/lib/supabase/pdf/boleta';
 
