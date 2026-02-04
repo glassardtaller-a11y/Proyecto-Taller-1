@@ -1,4 +1,5 @@
 export const runtime = 'nodejs';
+
 import { createClient } from '@supabase/supabase-js';
 import { generateBoletaPDF } from '@/lib/supabase/pdf/boleta';
 
@@ -9,9 +10,9 @@ const supabaseService = createClient(
 
 export async function GET(
     request: Request,
-    { params }: { params: Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
+    const { id } = await context.params;
 
     const { data: boleta } = await supabaseService
         .from('boletas')
@@ -33,11 +34,8 @@ export async function GET(
         );
     }
 
-    const ciclo: any = boleta.ciclo;
-    const empleado: any = boleta.empleado;
-
-    const fecha_inicio = ciclo.fecha_inicio;
-    const fecha_fin = ciclo.fecha_fin;
+    const { ciclo, empleado } = boleta;
+    const { fecha_inicio, fecha_fin } = ciclo as any;
 
     const { data: producciones } = await supabaseService
         .from('produccion')
