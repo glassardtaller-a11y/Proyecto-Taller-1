@@ -210,7 +210,7 @@ function TiposTrabajoSection() {
                         <label className="block text-sm font-medium text-foreground-muted mb-1.5">Tarifa (S/.)</label>
                         <input
                             type="number"
-                            step="0.01"
+                            step="0.001"
                             min="0"
                             value={formData.tarifa_actual}
                             onChange={(e) => setFormData({ ...formData, tarifa_actual: parseFloat(e.target.value) || 0 })}
