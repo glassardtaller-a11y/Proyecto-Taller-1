@@ -37,25 +37,25 @@ function BoletaPDF({
     const formatDate = (d: string) =>
         new Date(d).toLocaleDateString('es-PE');
 
-    const produccionesAgrupadas = producciones.reduce(
-        (acc: any[], p: any) => {
+    const produccionesAgrupadas = Object.values(
+        producciones.reduce((acc: any, p: any) => {
+
+            const categoria = p.tipos_trabajo?.descripcion || 'OTROS';
             const nombre = p.tipos_trabajo?.nombre || 'Trabajo';
 
-            const existente = acc.find(x => x.nombre === nombre);
-
-            if (existente) {
-                existente.subtotal += Number(p.subtotal);
-            } else {
-                acc.push({
+            if (!acc[categoria]) acc[categoria] = {};
+            if (!acc[categoria][nombre]) {
+                acc[categoria][nombre] = {
                     nombre,
-                    subtotal: Number(p.subtotal),
-                });
+                    subtotal: 0
+                };
             }
 
+            acc[categoria][nombre].subtotal += p.subtotal;
+
             return acc;
-        },
-        []
-    );
+        }, {})
+    ).map((cat: any) => Object.values(cat));
 
 
     return (
@@ -88,10 +88,21 @@ function BoletaPDF({
                 <Text style={styles.bold}>PRODUCCIÓN</Text>
                 {produccionesAgrupadas.length === 0 && <Text>(Sin registros)</Text>}
 
-                {produccionesAgrupadas.map((p: any, i: number) => (
-                    <View key={i} style={styles.row}>
-                        <Text>{p.nombre}</Text>
-                        <Text>{formatMoney(p.subtotal)}</Text>
+                {produccionesAgrupadas.map((grupo: any, i: number) => (
+                    <View key={i}>
+
+                        {/* Subtítulo (categoría) */}
+                        <Text style={[styles.bold, { marginTop: 4 }]}>
+                            {grupo[0]?.descripcion}
+                        </Text>
+
+                        {grupo.items.map((p: any, j: number) => (
+                            <View key={j} style={styles.row}>
+                                <Text>{p.nombre}</Text>
+                                <Text>{formatMoney(p.subtotal)}</Text>
+                            </View>
+                        ))}
+
                     </View>
                 ))}
 
