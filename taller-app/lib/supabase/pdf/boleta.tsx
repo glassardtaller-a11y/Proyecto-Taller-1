@@ -126,21 +126,27 @@ function BoletaPDF({
 
                 <View style={styles.line} />
 
-                {movimientos.length > 0 && (
-                    <>
-                        <Text style={styles.bold}>MOVIMIENTOS</Text>
-                        {movimientos.map((m: any, i: number) => (
-                            <View key={i} style={styles.row}>
-                                <Text>{m.tipo}</Text>
-                                <Text>
-                                    {m.signo}
-                                    {formatMoney(m.monto)}
-                                </Text>
-                            </View>
-                        ))}
-                        <View style={styles.line} />
-                    </>
+                <Text style={styles.bold}>MOVIMIENTOS</Text>
+
+                {movimientos.length === 0 && (
+                    <View style={styles.row}>
+                        <Text>Sin movimientos</Text>
+                        <Text>{formatMoney(0)}</Text>
+                    </View>
                 )}
+
+                {movimientos.map((m: any, i: number) => (
+                    <View key={i} style={styles.row}>
+                        <Text>{m.tipo}</Text>
+                        <Text>
+                            {m.signo}
+                            {formatMoney(m.monto)}
+                        </Text>
+                    </View>
+                ))}
+
+                <View style={styles.line} />
+
 
                 <View style={styles.row}>
                     <Text style={styles.bold}>TOTAL A PAGAR</Text>
