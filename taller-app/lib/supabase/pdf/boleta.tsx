@@ -43,19 +43,27 @@ function BoletaPDF({
             const categoria = p.tipos_trabajo?.descripcion || 'OTROS';
             const nombre = p.tipos_trabajo?.nombre || 'Trabajo';
 
-            if (!acc[categoria]) acc[categoria] = {};
-            if (!acc[categoria][nombre]) {
-                acc[categoria][nombre] = {
+            if (!acc[categoria]) {
+                acc[categoria] = {
+                    descripcion: categoria,
+                    items: {}
+                };
+            }
+
+            if (!acc[categoria].items[nombre]) {
+                acc[categoria].items[nombre] = {
                     nombre,
                     subtotal: 0
                 };
             }
 
-            acc[categoria][nombre].subtotal += p.subtotal;
+            acc[categoria].items[nombre].subtotal += p.subtotal;
 
             return acc;
+
         }, {})
-    ).map((cat: any) => Object.values(cat));
+    );
+
 
 
     return (
