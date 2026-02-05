@@ -69,7 +69,7 @@ function BoletaPDF({
 
                 {producciones.map((p: any, i: number) => (
                     <View key={i} style={styles.row}>
-                        <Text>{p.tipo_trabajo?.nombre ?? 'Trabajo'}</Text>
+                        <Text>{p.tipos_trabajo?.nombre ?? 'Trabajo'}</Text>
                         <Text>{formatMoney(p.subtotal)}</Text>
                     </View>
                 ))}
