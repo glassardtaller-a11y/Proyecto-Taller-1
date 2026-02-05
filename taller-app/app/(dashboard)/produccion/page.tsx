@@ -323,10 +323,10 @@ export default function ProduccionPage() {
                                                 {row.cantidad}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground-muted text-right font-mono">
-                                                S/. {Number(row.tarifa_aplicada.toFixed(2)).toFixed(2)}
+                                                S/. {(Math.round(row.tarifa_aplicada * 1000) / 1000).toFixed(3)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-accent-emerald text-right font-mono font-semibold">
-                                                S/. {Number(row.subtotal.toFixed(2)).toFixed(2)}
+                                                S/. {(Math.round(row.subtotal * 100) / 100).toFixed(2)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <button
