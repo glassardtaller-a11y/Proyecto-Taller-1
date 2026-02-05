@@ -45,7 +45,7 @@ function BoletaPDF({
 
             if (!acc[categoria]) {
                 acc[categoria] = {
-                    descripcion: categoria,
+                    categoria: categoria,
                     items: {}
                 };
             }
@@ -99,12 +99,13 @@ function BoletaPDF({
                 {produccionesAgrupadas.map((grupo: any, i: number) => (
                     <View key={i}>
 
-                        {/* Subtítulo (categoría) */}
+                        {/* Categoría */}
                         <Text style={[styles.bold, { marginTop: 4 }]}>
-                            {grupo[0]?.descripcion}
+                            {grupo.categoria}
                         </Text>
 
-                        {grupo.items.map((p: any, j: number) => (
+                        {/* Items */}
+                        {Object.values(grupo.items).map((p: any, j: number) => (
                             <View key={j} style={styles.row}>
                                 <Text>{p.nombre}</Text>
                                 <Text>{formatMoney(p.subtotal)}</Text>
@@ -113,6 +114,7 @@ function BoletaPDF({
 
                     </View>
                 ))}
+
 
 
                 <View style={styles.row}>
