@@ -20,9 +20,21 @@ export default function BoletaVentaPage() {
             return;
         }
 
+        const { data: last } = await supabase
+            .from('ventas_boletas')
+            .select('numero')
+            .order('numero', { ascending: false })
+            .limit(1)
+            .single();
+
+        const nextNumero = (last?.numero || 0) + 1;
+
+
         const { data, error } = await supabase
             .from('ventas_boletas')
             .insert({
+                serie: 'B001',
+                numero: nextNumero,
                 cliente_nombre: cliente,
                 cliente_documento: documento,
                 cliente_direccion: direccion,

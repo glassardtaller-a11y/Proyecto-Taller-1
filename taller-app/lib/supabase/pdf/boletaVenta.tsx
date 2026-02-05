@@ -9,104 +9,175 @@ import {
 
 const styles = StyleSheet.create({
     page: {
-        width: 280,
-        padding: 16,
-        fontSize: 9,
+        padding: 32,
+        fontSize: 10,
         fontFamily: 'Helvetica',
     },
-    center: { textAlign: 'center' },
+
     bold: { fontWeight: 'bold' },
+    center: { textAlign: 'center' },
+    small: { fontSize: 9 },
+
+    headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+    },
+
+    box: {
+        border: '1 solid #000',
+        padding: 6,
+    },
+
+    rightBox: {
+        border: '1 solid #000',
+        padding: 10,
+        alignItems: 'center',
+    },
+
     line: {
         borderBottom: '1 solid #000',
-        marginVertical: 6,
+        marginVertical: 10,
     },
+
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+
     tableHeader: {
         flexDirection: 'row',
         borderBottom: '1 solid #000',
         paddingBottom: 4,
-        marginTop: 6,
+        marginTop: 10,
+        fontWeight: 'bold',
     },
+
+    colQty: { width: '10%', textAlign: 'center' },
     colDesc: { width: '40%' },
-    colQty: { width: '15%', textAlign: 'right' },
-    colPU: { width: '20%', textAlign: 'right' },
-    colTotal: { width: '25%', textAlign: 'right' },
+    colVU: { width: '15%', textAlign: 'right' },
+    colPU: { width: '15%', textAlign: 'right' },
+    colTotal: { width: '20%', textAlign: 'right' },
 });
 
+/* ================================================= */
+
 function BoletaVentaPDF({ boleta, detalles }: any) {
+
     const money = (n: number) => `S/. ${Number(n).toFixed(2)}`;
+
     const date = (d: string) =>
         new Date(d).toLocaleDateString('es-PE');
 
     return (
         <Document>
-            <Page size="A6" style={styles.page}>
+            <Page size="A4" style={styles.page}>
 
-                {/* EMPRESA */}
-                <Text style={[styles.center, styles.bold]}>GLASARD PERÚ</Text>
-                <Text style={styles.center}>BOLETA DE VENTA</Text>
+                {/* ================= EMPRESA ================= */}
+                <View style={styles.headerRow}>
 
-                <View style={styles.line} />
+                    <View style={{ width: '60%' }}>
+                        <Text style={styles.bold}>GLASARD PERÚ</Text>
+                        <Text style={styles.small}>RUC: 20600000001</Text>
+                        <Text style={styles.small}>Dirección: Av. Principal 123 - Cajamarca</Text>
+                        <Text style={styles.small}>Tel: 976672837</Text>
+                        <Text style={styles.small}>Email: glasardtaller@gmail.com</Text>
+                    </View>
 
-                {/* DATOS */}
-                <View style={styles.row}>
-                    <Text>Fecha:</Text>
-                    <Text>{date(boleta.created_at)}</Text>
+                    <View style={[styles.rightBox, { width: '35%' }]}>
+                        <Text style={styles.bold}>BOLETA DE VENTA</Text>
+                        <Text>
+                            {boleta.serie}-{String(boleta.numero).padStart(8, '0')}
+                        </Text>
+                    </View>
+
                 </View>
 
-                <Text>Cliente: {boleta.cliente_nombre}</Text>
-                <Text>DNI/RUC: {boleta.cliente_documento || '-'}</Text>
-                <Text>Dirección: {boleta.cliente_direccion || '-'}</Text>
+                {/* ================= DATOS CLIENTE ================= */}
+                <View style={[styles.box, { marginBottom: 10 }]}>
 
-                <View style={styles.line} />
+                    <View style={styles.row}>
+                        <Text>Cliente:</Text>
+                        <Text>{boleta.cliente_nombre}</Text>
+                    </View>
 
-                {/* CABECERA TABLA */}
+                    <View style={styles.row}>
+                        <Text>DNI / RUC:</Text>
+                        <Text>{boleta.cliente_documento || '-'}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text>Dirección:</Text>
+                        <Text>{boleta.cliente_direccion || '-'}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text>Fecha Emisión:</Text>
+                        <Text>{date(boleta.created_at)}</Text>
+                    </View>
+
+                </View>
+
+                {/* ================= CABECERA TABLA ================= */}
                 <View style={styles.tableHeader}>
-                    <Text style={styles.colDesc}>Desc</Text>
                     <Text style={styles.colQty}>Cant</Text>
-                    <Text style={styles.colPU}>P.U</Text>
-                    <Text style={styles.colTotal}>Total</Text>
+                    <Text style={styles.colDesc}>Descripción</Text>
+                    <Text style={styles.colVU}>V/U</Text>
+                    <Text style={styles.colPU}>P/U</Text>
+                    <Text style={styles.colTotal}>Importe</Text>
                 </View>
 
-                {/* DETALLE */}
+                {/* ================= DETALLE ================= */}
                 {detalles.map((d: any, i: number) => (
                     <View key={i} style={styles.row}>
-                        <Text style={styles.colDesc}>{d.descripcion}</Text>
                         <Text style={styles.colQty}>{d.cantidad}</Text>
-                        <Text style={styles.colPU}>{money(d.precio_unitario)}</Text>
-                        <Text style={styles.colTotal}>{money(d.total)}</Text>
+                        <Text style={styles.colDesc}>{d.descripcion}</Text>
+                        <Text style={styles.colVU}>
+                            {money(d.precio_unitario / 1.18)}
+                        </Text>
+                        <Text style={styles.colPU}>
+                            {money(d.precio_unitario)}
+                        </Text>
+                        <Text style={styles.colTotal}>
+                            {money(d.total)}
+                        </Text>
                     </View>
                 ))}
 
                 <View style={styles.line} />
 
-                {/* TOTALES */}
-                <View style={styles.row}>
-                    <Text>Subtotal:</Text>
-                    <Text>{money(boleta.subtotal)}</Text>
-                </View>
+                {/* ================= TOTALES ================= */}
+                <View style={{ width: '40%', alignSelf: 'flex-end' }}>
 
-                <View style={styles.row}>
-                    <Text>IGV (18%):</Text>
-                    <Text>{money(boleta.igv)}</Text>
-                </View>
+                    <View style={styles.row}>
+                        <Text>GRAVADA:</Text>
+                        <Text>{money(boleta.subtotal)}</Text>
+                    </View>
 
-                <View style={styles.row}>
-                    <Text style={styles.bold}>TOTAL:</Text>
-                    <Text style={styles.bold}>{money(boleta.total)}</Text>
+                    <View style={styles.row}>
+                        <Text>IGV (18%):</Text>
+                        <Text>{money(boleta.igv)}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.bold}>TOTAL:</Text>
+                        <Text style={styles.bold}>{money(boleta.total)}</Text>
+                    </View>
+
                 </View>
 
                 <View style={styles.line} />
 
-                <Text style={styles.center}>Gracias por su compra</Text>
+                <Text style={styles.center}>
+                    Gracias por su compra
+                </Text>
 
             </Page>
         </Document>
     );
 }
+
+/* ================================================= */
 
 export async function generateBoletaVentaPDF({
     boleta,
@@ -115,6 +186,7 @@ export async function generateBoletaVentaPDF({
     boleta: any;
     detalles: any[];
 }) {
+
     const buffer = await renderToBuffer(
         <BoletaVentaPDF boleta={boleta} detalles={detalles} />
     );
