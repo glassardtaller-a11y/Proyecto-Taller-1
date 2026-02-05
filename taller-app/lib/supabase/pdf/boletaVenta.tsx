@@ -4,6 +4,7 @@ import {
     Text,
     View,
     StyleSheet,
+    Image,
     renderToBuffer,
 } from '@react-pdf/renderer';
 
@@ -66,6 +67,10 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
 
     const money = (n: number) => `S/. ${Number(n).toFixed(2)}`;
 
+    function numeroALetras(num: number) {
+        return `${num.toFixed(2)} SOLES`;
+    }
+
     const date = (d: string) =>
         new Date(d).toLocaleDateString('es-PE');
 
@@ -75,6 +80,11 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
 
                 {/* ================= EMPRESA ================= */}
                 <View style={styles.headerRow}>
+
+                    <Image
+                        src={process.cwd() + '/public/logo.png'}
+                        style={{ width: 90, marginBottom: 6 }}
+                    />
 
                     <View style={{ width: '60%' }}>
                         <Text style={styles.bold}>GLASARD PERÚ</Text>
@@ -97,23 +107,19 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
                 <View style={[styles.box, { marginBottom: 10 }]}>
 
                     <View style={styles.row}>
-                        <Text>Cliente:</Text>
-                        <Text>{boleta.cliente_nombre}</Text>
+                        <Text>Cliente: {boleta.cliente_nombre}</Text>
                     </View>
 
                     <View style={styles.row}>
-                        <Text>DNI / RUC:</Text>
-                        <Text>{boleta.cliente_documento || '-'}</Text>
+                        <Text>DNI / RUC: {boleta.cliente_documento || '-'}</Text>
                     </View>
 
                     <View style={styles.row}>
-                        <Text>Dirección:</Text>
-                        <Text>{boleta.cliente_direccion || '-'}</Text>
+                        <Text>Dirección: {boleta.cliente_direccion || '-'}</Text>
                     </View>
 
                     <View style={styles.row}>
-                        <Text>Fecha Emisión:</Text>
-                        <Text>{date(boleta.created_at)}</Text>
+                        <Text>Fecha Emisión: {date(boleta.created_at)}</Text>
                     </View>
 
                 </View>
@@ -167,6 +173,13 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
                 </View>
 
                 <View style={styles.line} />
+
+                <View style={styles.box}>
+                    <Text>
+                        IMPORTE EN LETRAS: {numeroALetras(boleta.total)}
+                    </Text>
+                </View>
+
 
                 <Text style={styles.center}>
                     Gracias por su compra
