@@ -355,8 +355,8 @@ export function usePagos(): UsePagosReturn {
             const emp = empleadosPendientes.find(e => e.id === empleadoId);
 
             if (emp && nuevoCiclo) {
-                // Create boleta
-                await supabase
+
+                const { data: boletaCreada, error: boletaError } = await supabase
                     .from('boletas')
                     .upsert({
                         empleado_id: empleadoId,
@@ -366,8 +366,21 @@ export function usePagos(): UsePagosReturn {
                         total_descuentos: emp.total_descuentos,
                         pagado: true,
                         pagado_at: new Date().toISOString(),
-                    }, { onConflict: 'empleado_id,ciclo_id' });
+                    })
+                    .select()
+                    .single();
+
+                if (boletaError) throw boletaError;
+
+                // 🔥 LLAMAR BACKEND
+                await fetch('/api/pagos/cerrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cicloId: nuevoCiclo.id })
+                });
+
             }
+
 
             await fetchEmpleadosPendientes();
             await fetchBoletas();
