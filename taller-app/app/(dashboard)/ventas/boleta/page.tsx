@@ -161,6 +161,10 @@ export default function BoletaVentaPage() {
                             onChange={e => updateItem(i, 'cantidad', Number(e.target.value))}
                         />
 
+                        <div className="text-sm text-foreground-muted">
+                            S/. {getValorUnitario(it.precio_unitario).toFixed(2)}
+                        </div>
+
                         <input
                             type="number"
                             className="input"
@@ -168,9 +172,6 @@ export default function BoletaVentaPage() {
                             onChange={e => updateItem(i, 'precio_unitario', Number(e.target.value))}
                         />
 
-                        <div className="text-sm text-foreground-muted">
-                            S/. {getValorUnitario(it.precio_unitario).toFixed(2)}
-                        </div>
 
                         <div>
                             S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
