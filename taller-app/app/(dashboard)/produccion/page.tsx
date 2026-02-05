@@ -348,7 +348,9 @@ export default function ProduccionPage() {
                                             Total del día:
                                         </td>
                                         <td className="px-6 py-3 text-right text-lg font-bold text-accent-emerald font-mono">
-                                            S/. {produccion.reduce((sum, p) => sum + p.subtotal, 0).toFixed(2)}
+                                            S/. {produccion
+                                                .reduce((sum, p) => sum + Math.round(p.subtotal * 100) / 100, 0)
+                                                .toFixed(2)}
                                         </td>
                                         <td></td>
                                     </tr>
