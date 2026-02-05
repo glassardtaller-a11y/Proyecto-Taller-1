@@ -1,26 +1,23 @@
-import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
+
 import { cerrarYCobrarCiclo } from '@/lib/supabase/service';
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
-        const { cicloId } = body;
+        const { cicloId } = await req.json();
 
         if (!cicloId) {
-            return NextResponse.json(
-                { error: 'cicloId requerido' },
-                { status: 400 }
-            );
+            return Response.json({ error: 'cicloId requerido' }, { status: 400 });
         }
 
         await cerrarYCobrarCiclo(cicloId);
 
-        return NextResponse.json({ ok: true });
-    } catch (error: any) {
-        console.error('Error cerrar ciclo:', error);
+        return Response.json({ ok: true });
 
-        return NextResponse.json(
-            { error: error?.message || 'Error al cerrar ciclo' },
+    } catch (error) {
+        console.error(error);
+        return Response.json(
+            { error: 'Error al cerrar ciclo y generar PDF' },
             { status: 500 }
         );
     }
