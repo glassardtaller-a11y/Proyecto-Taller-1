@@ -24,6 +24,7 @@ interface AsistenciaConEmpleado {
     estado: AsistenciaStatus;
     hora_entrada: string | null;
     hora_salida: string | null;
+    horas_decimal: number | null;
     created_at: string;
     empleado: Empleado | null;
 }
@@ -76,7 +77,17 @@ export function useAsistencia(
             // 1️⃣ Asistencias
             let asistQuery = supabase
                 .from('asistencia')
-                .select('*')
+                .select(`
+                    id,
+                    fecha,
+                    codigo,
+                    turno,
+                    estado,
+                    hora_entrada,
+                    hora_salida,
+                    horas_decimal,
+                    created_at
+                    `)
                 .eq('fecha', fechaFiltro)
                 .order('hora_entrada', { ascending: true });
 
@@ -105,8 +116,9 @@ export function useAsistencia(
                 codigo: a.codigo,
                 turno: a.turno,
                 estado: a.estado,
-                hora_entrada: a.hora_entra,
+                hora_entrada: a.hora_entrada,
                 hora_salida: a.hora_salida,
+                horas_decimal: a.horas_decimal,
                 created_at: a.created_at,
                 empleado: empleadosMap.get(a.codigo) ?? null,
             }));

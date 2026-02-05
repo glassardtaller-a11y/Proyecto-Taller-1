@@ -5,6 +5,11 @@ import { StatusBadge } from '@/components/ui';
 import { useAsistencia } from '@/hooks';
 import { useState } from 'react';
 
+function decimalToHM(decimal: number) {
+    const horas = Math.floor(decimal);
+    const minutos = Math.round((decimal - horas) * 60);
+    return `${horas}h ${minutos.toString().padStart(2, '0')}min`;
+}
 
 // Skeleton loader para stats
 function SkeletonStat() {
@@ -197,7 +202,9 @@ export default function AsistenciaPage() {
                                                     {row.hora_salida ? row.hora_salida.substring(0, 5) : '--:--'}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-foreground-muted">
-                                                    {horasTrabajadas}
+                                                    {row.horas_decimal
+                                                        ? decimalToHM(row.horas_decimal)
+                                                        : '--'}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <StatusBadge
