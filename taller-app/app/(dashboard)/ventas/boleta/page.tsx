@@ -43,8 +43,8 @@ export default function BoletaVentaPage() {
             boleta_id: data.id,
             descripcion: it.descripcion,
             cantidad: it.cantidad,
-            precio_unitario: it.precio,
-            total: it.cantidad * it.precio
+            precio_unitario: it.precio_unitario,
+            total: it.cantidad * it.precio_unitario
         }));
 
         await supabase
@@ -60,9 +60,13 @@ export default function BoletaVentaPage() {
         setItems([...items, {
             descripcion: '',
             cantidad: 1,
-            precio: 0
+            precio_unitario: 0
         }]);
     }
+    function getValorUnitario(precioUnitario: number) {
+        return precioUnitario / 1.18;
+    }
+
 
     function updateItem(i: number, field: string, value: any) {
         const copy = [...items];
@@ -70,13 +74,14 @@ export default function BoletaVentaPage() {
         setItems(copy);
     }
 
-    const subtotal = items.reduce(
-        (s, i) => s + i.cantidad * i.precio,
+    const total = items.reduce(
+        (s, i) => s + i.cantidad * i.precio_unitario,
         0
     );
 
-    const igv = subtotal * 0.18;
-    const total = subtotal + igv;
+    const subtotal = total / 1.18;
+    const igv = total - subtotal;
+
 
     return (
         <div className="max-w-5xl mx-auto space-y-8">
@@ -129,17 +134,18 @@ export default function BoletaVentaPage() {
                 <h2 className="font-semibold">Detalle de Productos</h2>
 
                 {/* Cabecera */}
-                <div className="grid grid-cols-5 font-semibold text-sm text-foreground-muted">
+                <div className="grid grid-cols-6 font-semibold text-sm text-foreground-muted">
                     <div>Descripción</div>
                     <div>Cantidad</div>
-                    <div>Precio</div>
+                    <div>P/U</div>
+                    <div>V/U</div>
                     <div>Total</div>
                     <div></div>
                 </div>
 
                 {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-5 gap-2 items-center">
+                    <div key={i} className="grid grid-cols-6 gap-2 items-center">
 
                         <input
                             className="input"
@@ -158,12 +164,16 @@ export default function BoletaVentaPage() {
                         <input
                             type="number"
                             className="input"
-                            value={it.precio}
-                            onChange={e => updateItem(i, 'precio', Number(e.target.value))}
+                            value={it.precio_unitario}
+                            onChange={e => updateItem(i, 'precio_unitario', Number(e.target.value))}
                         />
 
+                        <div className="text-sm text-foreground-muted">
+                            S/. {getValorUnitario(it.precio_unitario).toFixed(2)}
+                        </div>
+
                         <div>
-                            S/. {(it.cantidad * it.precio).toFixed(2)}
+                            S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
                         </div>
 
                         <button
