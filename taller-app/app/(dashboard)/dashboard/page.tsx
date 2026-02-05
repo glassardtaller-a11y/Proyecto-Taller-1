@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import { StatCard, Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import { StatusBadge, RoleBadge } from '@/components/ui';
@@ -229,24 +230,63 @@ export default function DashboardPage() {
                     <CardTitle>Acciones Rápidas</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        {[
-                            { label: 'Escanear QR', icon: '📱', color: 'from-accent-orange to-accent-amber' },
-                            { label: 'Registrar Producción', icon: '📊', color: 'from-accent-violet to-accent-sky' },
-                            { label: 'Nuevo Adelanto', icon: '💰', color: 'from-accent-emerald to-teal-500' },
-                            { label: 'Generar Boleta', icon: '📄', color: 'from-accent-rose to-pink-500' },
-                        ].map((action) => (
-                            <button
+                    {[
+                        {
+                            label: 'Escanear QR',
+                            icon: '📱',
+                            color: 'from-accent-orange to-accent-amber',
+                            href: 'https://script.google.com/macros/s/AKfycbwfVlntLUDfRXBY75ZOtqtusAmlM1NVWZHY18EJwTEN_3Fm4HD1xZuuFWh8gFVdzhUm/exec'
+                        },
+                        {
+                            label: 'Registrar Producción',
+                            icon: '📊',
+                            color: 'from-accent-violet to-accent-sky',
+                            href: '/produccion'
+                        },
+                        {
+                            label: 'Nuevo Adelanto',
+                            icon: '💰',
+                            color: 'from-accent-emerald to-teal-500',
+                            href: '/pagos'
+                        },
+                        {
+                            label: 'Generar Boleta',
+                            icon: '📄',
+                            color: 'from-accent-rose to-pink-500',
+                            href: '/ventas/boleta'
+                        }
+                    ].map((action) => (
+                        action.href.startsWith('http') ? (
+                            <a
                                 key={action.label}
-                                className="flex flex-col items-center gap-3 p-4 rounded-xl bg-glass border border-glass-border hover:bg-glass-hover hover:border-glass-border-hover transition-all duration-200 hover:-translate-y-1"
+                                href={action.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
-                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center text-2xl`}>
-                                    {action.icon}
+                                <div className="flex flex-col items-center gap-3 p-4 rounded-xl bg-glass border border-glass-border hover:bg-glass-hover hover:border-glass-border-hover transition-all duration-200 hover:-translate-y-1 cursor-pointer">
+                                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center text-2xl`}>
+                                        {action.icon}
+                                    </div>
+                                    <span className="text-sm font-medium text-foreground text-center">
+                                        {action.label}
+                                    </span>
                                 </div>
-                                <span className="text-sm font-medium text-foreground text-center">{action.label}</span>
-                            </button>
-                        ))}
-                    </div>
+                            </a>
+                        ) : (
+                            <Link key={action.label} href={action.href}>
+                                <div className="flex flex-col items-center gap-3 p-4 rounded-xl bg-glass border border-glass-border hover:bg-glass-hover hover:border-glass-border-hover transition-all duration-200 hover:-translate-y-1 cursor-pointer">
+                                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center text-2xl`}>
+                                        {action.icon}
+                                    </div>
+                                    <span className="text-sm font-medium text-foreground text-center">
+                                        {action.label}
+                                    </span>
+                                </div>
+                            </Link>
+                        )
+                    ))}
+
+
                 </CardContent>
             </Card>
         </div>
