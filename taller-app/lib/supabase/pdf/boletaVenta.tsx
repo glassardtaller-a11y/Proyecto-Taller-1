@@ -68,7 +68,55 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
     const money = (n: number) => `S/. ${Number(n).toFixed(2)}`;
 
     function numeroALetras(num: number) {
-        return `${num.toFixed(2)} SOLES`;
+
+        const unidades = [
+            '', 'UNO', 'DOS', 'TRES', 'CUATRO', 'CINCO',
+            'SEIS', 'SIETE', 'OCHO', 'NUEVE'
+        ];
+
+        const decenas = [
+            '', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA',
+            'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'
+        ];
+
+        const especiales: any = {
+            11: 'ONCE', 12: 'DOCE', 13: 'TRECE', 14: 'CATORCE', 15: 'QUINCE'
+        };
+
+        function convertirMenor100(n: number) {
+            if (n <= 9) return unidades[n];
+            if (especiales[n]) return especiales[n];
+
+            const d = Math.floor(n / 10);
+            const u = n % 10;
+
+            if (n >= 16 && n <= 19) return 'DIECI' + unidades[u];
+            if (n >= 21 && n <= 29) return 'VEINTI' + unidades[u];
+
+            return decenas[d] + (u ? ' Y ' + unidades[u] : '');
+        }
+
+        function convertir(n: number): string {
+            if (n < 100) return convertirMenor100(n);
+            if (n < 1000) {
+                const c = Math.floor(n / 100);
+                const r = n % 100;
+                return (c === 1 ? 'CIENTO' : unidades[c] + 'CIENTOS') +
+                    (r ? ' ' + convertirMenor100(r) : '');
+            }
+            if (n < 1000000) {
+                const m = Math.floor(n / 1000);
+                const r = n % 1000;
+                return (m === 1 ? 'MIL' : convertir(m) + ' MIL') +
+                    (r ? ' ' + convertir(r) : '');
+            }
+            return '';
+        }
+
+        const entero = Math.floor(num);
+        const decimal = Math.round((num - entero) * 100);
+
+        return `${convertir(entero)} CON ${decimal.toString().padStart(2, '0')}/100 SOLES`;
     }
 
     const date = (d: string) =>
@@ -82,7 +130,7 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
                 <View style={styles.headerRow}>
 
                     <Image
-                        src={process.cwd() + '/public/logo.png'}
+                        src="file:///public/logo.png"
                         style={{ width: 90, marginBottom: 6 }}
                     />
 
