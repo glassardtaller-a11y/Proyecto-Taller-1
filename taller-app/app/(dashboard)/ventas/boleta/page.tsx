@@ -79,75 +79,137 @@ export default function BoletaVentaPage() {
     const total = subtotal + igv;
 
     return (
-        <div className="space-y-6">
+        <div className="max-w-5xl mx-auto space-y-8">
 
+            {/* Título */}
             <h1 className="text-2xl font-bold">Nueva Boleta de Venta</h1>
 
-            {/* Cliente */}
-            <div className="grid grid-cols-3 gap-4">
-                <input
-                    placeholder="Cliente"
-                    className="input"
-                    value={cliente}
-                    onChange={e => setCliente(e.target.value)}
-                />
-                <input
-                    placeholder="DNI / RUC"
-                    className="input"
-                    value={documento}
-                    onChange={e => setDocumento(e.target.value)}
-                />
+            {/* DATOS CLIENTE */}
+            <div className="bg-glass p-6 rounded-xl space-y-4">
+                <h2 className="font-semibold">Datos del Cliente</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <div>
+                        <label className="text-sm">Cliente</label>
+                        <input
+                            className="input w-full"
+                            value={cliente}
+                            onChange={e => setCliente(e.target.value)}
+                            placeholder="Nombre del cliente"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm">DNI / RUC</label>
+                        <input
+                            className="input w-full"
+                            value={documento}
+                            onChange={e => setDocumento(e.target.value)}
+                            placeholder="Documento"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm">Dirección</label>
+                        <input
+                            className="input w-full"
+                            value={direccion}
+                            onChange={e => setDireccion(e.target.value)}
+                            placeholder="Dirección"
+                        />
+                    </div>
+
+                </div>
             </div>
 
-            {/* Items */}
-            <div className="space-y-2">
+            {/* DETALLE */}
+            <div className="bg-glass p-6 rounded-xl space-y-4">
+
+                <h2 className="font-semibold">Detalle de Productos</h2>
+
+                {/* Cabecera */}
+                <div className="grid grid-cols-5 font-semibold text-sm text-foreground-muted">
+                    <div>Descripción</div>
+                    <div>Cantidad</div>
+                    <div>Precio</div>
+                    <div>Total</div>
+                    <div></div>
+                </div>
+
+                {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-4 gap-2">
+                    <div key={i} className="grid grid-cols-5 gap-2 items-center">
+
                         <input
-                            placeholder="Descripción"
                             className="input"
                             value={it.descripcion}
                             onChange={e => updateItem(i, 'descripcion', e.target.value)}
+                            placeholder="Producto"
                         />
+
                         <input
                             type="number"
                             className="input"
                             value={it.cantidad}
                             onChange={e => updateItem(i, 'cantidad', Number(e.target.value))}
                         />
+
                         <input
                             type="number"
                             className="input"
                             value={it.precio}
                             onChange={e => updateItem(i, 'precio', Number(e.target.value))}
                         />
-                        <div className="flex items-center">
+
+                        <div>
                             S/. {(it.cantidad * it.precio).toFixed(2)}
                         </div>
+
+                        <button
+                            onClick={() =>
+                                setItems(items.filter((_, index) => index !== i))
+                            }
+                            className="text-red-500"
+                        >
+                            ✕
+                        </button>
+
                     </div>
                 ))}
+
+                <button
+                    onClick={addItem}
+                    className="bg-accent-violet px-4 py-2 rounded-lg text-white"
+                >
+                    + Agregar Producto
+                </button>
+
             </div>
 
-            <button onClick={addItem} className="btn">
-                + Agregar Item
-            </button>
+            {/* TOTALES */}
+            <div className="bg-glass p-6 rounded-xl text-right space-y-1">
 
-            {/* Totales */}
-            <div className="text-right space-y-1">
                 <div>Subtotal: S/. {subtotal.toFixed(2)}</div>
                 <div>IGV (18%): S/. {igv.toFixed(2)}</div>
+
                 <div className="text-xl font-bold">
                     Total: S/. {total.toFixed(2)}
                 </div>
+
             </div>
 
-            <button
-                onClick={guardarBoletaVenta}
-                className="bg-accent-rose px-4 py-2 rounded-lg text-white"
-            >
-                Generar Boleta
-            </button>
+            {/* BOTÓN */}
+            <div className="text-right">
+                <button
+                    onClick={guardarBoletaVenta}
+                    className="bg-accent-rose px-6 py-3 rounded-lg text-white text-lg"
+                >
+                    Generar Boleta
+                </button>
+            </div>
 
         </div>
     );
+
 }
