@@ -104,8 +104,10 @@ export default function ProduccionPage() {
 
     // Update tarifa when tipo_trabajo changes
     const tipoSeleccionado = tiposTrabajo.find(t => t.id === formData.tipo_trabajo_id);
-    const tarifaAplicada = tipoSeleccionado?.tarifa_actual || 0;
-    const subtotalCalculado = formData.cantidad * tarifaAplicada;
+    const tarifaAplicada = Number(tipoSeleccionado?.tarifa_actual || 0);
+
+    const subtotalCalculado =
+        Math.round(formData.cantidad * tarifaAplicada * 100) / 100;
 
     // Fetch production when date changes
     useEffect(() => {
@@ -435,7 +437,13 @@ export default function ProduccionPage() {
                                 <option value="">Seleccionar tipo</option>
                                 {tiposFiltrados.map(tipo => (
                                     <option key={tipo.id} value={tipo.id}>
-                                        {tipo.nombre} – S/. {tipo.tarifa_actual.toFixed(2)}
+                                        {tipo.nombre} – S/. {
+                                            Number(tipo.tarifa_actual).toLocaleString('es-PE', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 3
+                                            })
+                                        }
+
                                     </option>
                                 ))}
                             </select>
@@ -474,7 +482,10 @@ export default function ProduccionPage() {
                     <div className="p-4 rounded-lg bg-glass border border-glass-border">
                         <div className="flex justify-between items-center">
                             <span className="text-foreground-muted">Tarifa aplicada:</span>
-                            <span className="font-mono text-foreground">S/. {tarifaAplicada.toFixed(2)}</span>
+                            <span className="font-mono text-foreground">S/. {Number(tarifaAplicada).toLocaleString('es-PE', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 3
+                            })}</span>
                         </div>
                         <div className="flex justify-between items-center mt-2">
                             <span className="text-foreground-muted">Subtotal:</span>
