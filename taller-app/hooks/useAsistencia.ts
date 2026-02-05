@@ -105,7 +105,7 @@ export function useAsistencia(
                 codigo: a.codigo,
                 turno: a.turno,
                 estado: a.estado,
-                hora_entrada: a.hora_entrada,
+                hora_entrada: a.hora_entra,
                 hora_salida: a.hora_salida,
                 created_at: a.created_at,
                 empleado: empleadosMap.get(a.codigo) ?? null,

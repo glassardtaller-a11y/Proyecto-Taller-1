@@ -3,6 +3,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import { StatusBadge } from '@/components/ui';
 import { useAsistencia } from '@/hooks';
+import { useState } from 'react';
+
 
 // Skeleton loader para stats
 function SkeletonStat() {
@@ -30,7 +32,12 @@ function SkeletonTable() {
 }
 
 export default function AsistenciaPage() {
-    const { asistencias, stats, loading, error } = useAsistencia();
+
+    const [fechaSeleccionada, setFechaSeleccionada] = useState(
+        new Date().toISOString().split('T')[0]
+    );
+
+    const { asistencias, stats, loading, error } = useAsistencia(fechaSeleccionada);
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -38,15 +45,22 @@ export default function AsistenciaPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-foreground">Asistencia</h1>
-                    <p className="text-foreground-muted mt-1">
-                        Control de entradas y salidas del personal
-                        {!loading && (
-                            <span className="ml-2 text-foreground-subtle">
-                                ({new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' })})
-                            </span>
-                        )}
-                    </p>
+
+                    <div className="flex items-center gap-3 mt-1">
+                        <p className="text-foreground-muted">
+                            Control de entradas y salidas del personal
+                        </p>
+
+                        <input
+                            type="date"
+                            value={fechaSeleccionada}
+                            onChange={(e) => setFechaSeleccionada(e.target.value)}
+                            max={new Date().toISOString().split('T')[0]}
+                            className="px-3 py-1 rounded-lg bg-glass border border-glass-border text-sm text-foreground"
+                        />
+                    </div>
                 </div>
+
                 <button className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-accent-orange to-accent-amber text-white font-medium hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
@@ -107,7 +121,7 @@ export default function AsistenciaPage() {
             {/* Table */}
             <Card padding="none">
                 <CardHeader className="px-6 pt-6">
-                    <CardTitle>Registros de Hoy</CardTitle>
+                    <CardTitle>Registros del día</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -116,7 +130,7 @@ export default function AsistenciaPage() {
                         </div>
                     ) : asistencias.length === 0 && !error ? (
                         <div className="px-6 py-12 text-center text-foreground-muted">
-                            <p>No hay registros de asistencia para hoy</p>
+                            <p>No hay registros de asistencia para este día</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
@@ -186,9 +200,9 @@ export default function AsistenciaPage() {
                                                     {horasTrabajadas}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <StatusBadge 
-                                                        status={row.estado} 
-                                                        size="sm" 
+                                                    <StatusBadge
+                                                        status={row.estado}
+                                                        size="sm"
                                                     />
                                                 </td>
                                             </tr>
