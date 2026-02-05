@@ -143,7 +143,7 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
                     </View>
 
                     <View style={[styles.rightBox, { width: '35%' }]}>
-                        <Text style={styles.bold}>BOLETA DE VENTA</Text>
+                        <Text style={styles.bold}>NOTA DE VENTA</Text>
                         <Text>
                             {boleta.serie}-{String(boleta.numero).padStart(8, '0')}
                         </Text>
