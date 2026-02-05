@@ -136,9 +136,9 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
 
                     <View style={{ width: '60%' }}>
                         <Text style={styles.bold}>GLASARD PERÚ</Text>
-                        <Text style={styles.small}>RUC: 20600000001</Text>
-                        <Text style={styles.small}>Dirección: Av. Principal 123 - Cajamarca</Text>
-                        <Text style={styles.small}>Tel: 976672837</Text>
+                        <Text style={styles.small}>RUC: 10267176413</Text>
+                        <Text style={styles.small}>Dirección: Jr. YahuarHuaca 1080 - Baños Del Inca - Cajamarca</Text>
+                        <Text style={styles.small}>celular: 976672837</Text>
                         <Text style={styles.small}>Email: glasardtaller@gmail.com</Text>
                     </View>
 
