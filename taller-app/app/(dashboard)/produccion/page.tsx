@@ -106,8 +106,10 @@ export default function ProduccionPage() {
     const tipoSeleccionado = tiposTrabajo.find(t => t.id === formData.tipo_trabajo_id);
     const tarifaAplicada = Number(tipoSeleccionado?.tarifa_actual || 0);
 
-    const subtotalCalculado =
-        Math.round(formData.cantidad * tarifaAplicada * 100) / 100;
+    const subtotalCalculado = Number(
+        (formData.cantidad * tarifaAplicada).toFixed(2)
+    );
+
 
     // Fetch production when date changes
     useEffect(() => {
@@ -321,10 +323,10 @@ export default function ProduccionPage() {
                                                 {row.cantidad}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground-muted text-right font-mono">
-                                                S/. {row.tarifa_aplicada.toFixed(2)}
+                                                S/. {Number(row.tarifa_aplicada.toFixed(2)).toFixed(2)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-accent-emerald text-right font-mono font-semibold">
-                                                S/. {row.subtotal.toFixed(2)}
+                                                S/. {Number(row.subtotal.toFixed(2)).toFixed(2)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <button
