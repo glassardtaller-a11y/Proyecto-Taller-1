@@ -37,6 +37,27 @@ function BoletaPDF({
     const formatDate = (d: string) =>
         new Date(d).toLocaleDateString('es-PE');
 
+    const produccionesAgrupadas = producciones.reduce(
+        (acc: any[], p: any) => {
+            const nombre = p.tipos_trabajo?.nombre || 'Trabajo';
+
+            const existente = acc.find(x => x.nombre === nombre);
+
+            if (existente) {
+                existente.subtotal += Number(p.subtotal);
+            } else {
+                acc.push({
+                    nombre,
+                    subtotal: Number(p.subtotal),
+                });
+            }
+
+            return acc;
+        },
+        []
+    );
+
+
     return (
         <Document>
             <Page size={[164, 600]} style={styles.page}>
@@ -65,14 +86,15 @@ function BoletaPDF({
                 <View style={styles.line} />
 
                 <Text style={styles.bold}>PRODUCCIÓN</Text>
-                {producciones.length === 0 && <Text>(Sin registros)</Text>}
+                {produccionesAgrupadas.length === 0 && <Text>(Sin registros)</Text>}
 
-                {producciones.map((p: any, i: number) => (
+                {produccionesAgrupadas.map((p: any, i: number) => (
                     <View key={i} style={styles.row}>
-                        <Text>{p.tipos_trabajo?.nombre ?? 'Trabajo'}</Text>
+                        <Text>{p.nombre}</Text>
                         <Text>{formatMoney(p.subtotal)}</Text>
                     </View>
                 ))}
+
 
                 <View style={styles.row}>
                     <Text style={styles.bold}>Subtotal:</Text>
