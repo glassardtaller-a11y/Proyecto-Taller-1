@@ -154,7 +154,10 @@ function TiposTrabajoSection() {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm font-mono text-accent-emerald">
-                                            S/. {(tipo.tarifa_actual || 0).toFixed(2)}
+                                            S/. {Number(tipo.tarifa_actual || 0).toLocaleString('es-PE', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 3
+                                            })}
                                         </span>
                                         <button
                                             onClick={() => openEdit(tipo)}
