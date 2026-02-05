@@ -130,7 +130,7 @@ function BoletaVentaPDF({ boleta, detalles }: any) {
                 <View style={styles.headerRow}>
 
                     <Image
-                        src="file:///public/logo.png"
+                        src="https://proyecto-taller-1.vercel.app/logo.png"
                         style={{ width: 90, marginBottom: 6 }}
                     />
 
