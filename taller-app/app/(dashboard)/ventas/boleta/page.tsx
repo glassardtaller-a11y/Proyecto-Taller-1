@@ -164,10 +164,10 @@ export default function BoletaVentaPage() {
 
                 {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-2 md:grid-cols-6 gap-2 items-center">
+                    <div key={i} className="grid grid-cols-6 gap-2 items-center">
 
                         <input
-                            className="input col-span-2 md:col-span-1"
+                            className="input"
                             value={it.descripcion}
                             onChange={e => updateItem(i, 'descripcion', e.target.value)}
                             placeholder="Producto"
@@ -192,7 +192,7 @@ export default function BoletaVentaPage() {
                         />
 
 
-                        <div className="text-right">
+                        <div>
                             S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
                         </div>
 
