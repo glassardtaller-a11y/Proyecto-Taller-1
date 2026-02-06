@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     headerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: 12,
     },
 
@@ -32,8 +33,11 @@ const styles = StyleSheet.create({
 
     rightBox: {
         border: '1 solid #000',
-        padding: 10,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
         alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
     },
 
     line: {
