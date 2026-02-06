@@ -90,13 +90,20 @@ export default function ProduccionPage() {
     const { tiposTrabajo, loading: loadingTipos } = useTiposTrabajo();
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        empleado_id: string;
+        tipo_trabajo_id: string;
+        fecha: string;
+        cantidad: number | '';
+        nota: string;
+    }>({
         empleado_id: '',
         tipo_trabajo_id: '',
         fecha: fechaSeleccionada,
-        cantidad: 1,
+        cantidad: '',
         nota: '',
     });
+
     const [saving, setSaving] = useState(false);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
 
@@ -107,7 +114,7 @@ export default function ProduccionPage() {
     const tarifaAplicada = Number(tipoSeleccionado?.tarifa_actual || 0);
 
     const subtotalCalculado = Number(
-        (formData.cantidad * tarifaAplicada).toFixed(2)
+        ((Number(formData.cantidad) || 0) * tarifaAplicada).toFixed(2)
     );
 
 
@@ -121,7 +128,7 @@ export default function ProduccionPage() {
             empleado_id: empleados[0]?.id || '',
             tipo_trabajo_id: '',
             fecha: fechaSeleccionada, // ✅ AQUÍ
-            cantidad: 1,
+            cantidad: '',
             nota: '',
         });
         setCategoriaSeleccionada(''); // ✅ importante
@@ -138,7 +145,7 @@ export default function ProduccionPage() {
             empleado_id: formData.empleado_id,
             tipo_trabajo_id: formData.tipo_trabajo_id,
             fecha: formData.fecha,
-            cantidad: formData.cantidad,
+            cantidad: Number(formData.cantidad),
             tarifa_aplicada: tarifaAplicada,
             nota: formData.nota || undefined,
         });
@@ -464,8 +471,21 @@ export default function ProduccionPage() {
                             min="1"
                             step="1"
                             value={formData.cantidad}
-                            onChange={(e) => setFormData({ ...formData, cantidad: parseInt(e.target.value) || 1 })}
-                            className="w-full px-4 py-2 rounded-lg bg-glass border border-glass-border text-foreground focus:border-accent-orange focus:outline-none"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    cantidad: e.target.value === ''
+                                        ? ''
+                                        : Number(e.target.value)
+                                })
+                            }
+                            onBlur={() => {
+                                if (formData.cantidad === '') {
+                                    setFormData({ ...formData, cantidad: 1 });
+                                }
+                            }}
+                            className="w-full px-4 py-2 rounded-lg bg-glass border border-glass-border
+                                        text-foreground focus:border-accent-orange focus:outline-none"
                             required
                         />
                     </div>
