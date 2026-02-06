@@ -164,7 +164,7 @@ export default function BoletaVentaPage() {
 
                 {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-5 md:grid-cols-6 gap-2 items-center">
+                    <div key={i} className="grid grid-cols-2 md:grid-cols-6 gap-2 items-center">
 
                         <input
                             className="input col-span-2 md:col-span-1"
@@ -175,7 +175,7 @@ export default function BoletaVentaPage() {
 
                         <input
                             type="number"
-                            className="input w-16"
+                            className="input"
                             value={it.cantidad}
                             onChange={e => updateItem(i, 'cantidad', Number(e.target.value))}
                         />
@@ -186,13 +186,13 @@ export default function BoletaVentaPage() {
 
                         <input
                             type="number"
-                            className="input w-24"
+                            className="input"
                             value={it.precio_unitario}
                             onChange={e => updateItem(i, 'precio_unitario', Number(e.target.value))}
                         />
 
 
-                        <div>
+                        <div className="text-right">
                             S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
                         </div>
 
