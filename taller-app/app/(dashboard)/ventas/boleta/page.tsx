@@ -153,18 +153,17 @@ export default function BoletaVentaPage() {
                 <h2 className="font-semibold">Detalle de Productos</h2>
 
                 {/* Cabecera */}
-                <div className="grid grid-cols-5 md:grid-cols-6 font-semibold text-sm text-foreground-muted">
+                <div className="grid grid-cols-5 font-semibold text-sm text-foreground-muted">
                     <div>Descripción</div>
-                    <div>Cantidad</div>
+                    <div className="text-center">Cantidad</div>
                     <div className="hidden md:block">P/U</div>
-                    <div>V/U</div>
+                    <div className="text-center">V/U</div>
                     <div>Total</div>
-                    <div></div>
                 </div>
 
                 {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-5 md:grid-cols-6 gap-2 items-center">
+                    <div key={i} className="grid grid-cols-5 gap-2 items-center">
 
                         <input
                             className="input"
@@ -191,19 +190,24 @@ export default function BoletaVentaPage() {
                             onChange={e => updateItem(i, 'precio_unitario', Number(e.target.value))}
                         />
 
+                        <div className="flex items-center justify-between gap-2">
+                            <span>
+                                S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
+                            </span>
 
-                        <div>
-                            S/. {(it.cantidad * it.precio_unitario).toFixed(2)}
+                            <button
+                                onClick={() =>
+                                    setItems(items.filter((_, index) => index !== i))
+                                }
+                                className="text-red-500"
+                            >
+                                ✕
+                            </button>
                         </div>
 
-                        <button
-                            onClick={() =>
-                                setItems(items.filter((_, index) => index !== i))
-                            }
-                            className="text-red-500"
-                        >
-                            ✕
-                        </button>
+
+
+
 
                     </div>
                 ))}
