@@ -153,10 +153,10 @@ export default function BoletaVentaPage() {
                 <h2 className="font-semibold">Detalle de Productos</h2>
 
                 {/* Cabecera */}
-                <div className="grid grid-cols-6 font-semibold text-sm text-foreground-muted">
+                <div className="grid grid-cols-5 md:grid-cols-6 font-semibold text-sm text-foreground-muted">
                     <div>Descripción</div>
                     <div>Cantidad</div>
-                    <div>P/U</div>
+                    <div className="hidden md:block">P/U</div>
                     <div>V/U</div>
                     <div>Total</div>
                     <div></div>
@@ -164,10 +164,10 @@ export default function BoletaVentaPage() {
 
                 {/* Filas */}
                 {items.map((it, i) => (
-                    <div key={i} className="grid grid-cols-6 gap-2 items-center">
+                    <div key={i} className="grid grid-cols-5 md:grid-cols-6 gap-2 items-center">
 
                         <input
-                            className="input"
+                            className="input col-span-2 md:col-span-1"
                             value={it.descripcion}
                             onChange={e => updateItem(i, 'descripcion', e.target.value)}
                             placeholder="Producto"
@@ -175,18 +175,18 @@ export default function BoletaVentaPage() {
 
                         <input
                             type="number"
-                            className="input"
+                            className="input w-16"
                             value={it.cantidad}
                             onChange={e => updateItem(i, 'cantidad', Number(e.target.value))}
                         />
 
-                        <div className="text-sm text-foreground-muted">
+                        <div className="hidden md:block text-sm text-foreground-muted">
                             S/. {getValorUnitario(it.precio_unitario).toFixed(2)}
                         </div>
 
                         <input
                             type="number"
-                            className="input"
+                            className="input w-24"
                             value={it.precio_unitario}
                             onChange={e => updateItem(i, 'precio_unitario', Number(e.target.value))}
                         />
