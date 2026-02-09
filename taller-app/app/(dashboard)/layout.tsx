@@ -26,7 +26,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="app-shell bg-background">
+        <div className="app-shell bg-background flex flex-col">
             <div className="hidden lg:block">
                 <Sidebar
                     collapsed={sidebarCollapsed}
@@ -42,7 +42,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             </MobileSidebar>
 
             <div
-                className="transition-all duration-300 pb-20 lg:pb-0 flex flex-col flex-1"
+                className="transition-all duration-300 pb-20 lg:pb-0 flex flex-col flex-1 overflow-hidden"
                 style={{ marginLeft: getMainMargin() }}
             >
                 <Header
