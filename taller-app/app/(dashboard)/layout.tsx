@@ -26,7 +26,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="h-full bg-background flex flex-col">
             <div className="hidden lg:block">
                 <Sidebar
                     collapsed={sidebarCollapsed}
@@ -42,7 +42,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             </MobileSidebar>
 
             <div
-                className="transition-all duration-300 pb-20 lg:pb-0"
+                className="transition-all duration-300 pb-20 lg:pb-0 flex flex-col flex-1"
                 style={{ marginLeft: getMainMargin() }}
             >
                 <Header
@@ -51,7 +51,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     showSearch
                 />
 
-                <main className="p-4 lg:p-6">{children}</main>
+                <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+                    {children}
+                </main>
+
             </div>
 
             <MobileNav />

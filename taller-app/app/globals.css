@@ -10,12 +10,12 @@
   --background: #0a0a0f;
   --background-secondary: #12121a;
   --background-tertiary: #1a1a25;
-  
+
   /* Colores de texto */
   --foreground: #f5f5f5;
   --foreground-muted: #a1a1aa;
   --foreground-subtle: #71717a;
-  
+
   /* Colores de acento */
   --accent-orange: #f97316;
   --accent-orange-hover: #ea580c;
@@ -25,7 +25,7 @@
   --accent-rose: #f43f5e;
   --accent-violet: #8b5cf6;
   --accent-sky: #0ea5e9;
-  
+
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-bg-hover: rgba(255, 255, 255, 0.06);
@@ -33,20 +33,20 @@
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(255, 255, 255, 0.12);
   --glass-blur: 20px;
-  
+
   /* Sombras */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-glow-orange: 0 0 20px rgba(249, 115, 22, 0.3);
   --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.3);
-  
+
   /* Bordes */
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;
   --border-radius-xl: 1.5rem;
-  
+
   /* Transiciones */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -59,11 +59,11 @@
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
   --color-background-tertiary: var(--background-tertiary);
-  
+
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
   --color-foreground-subtle: var(--foreground-subtle);
-  
+
   /* Acentos */
   --color-accent-orange: var(--accent-orange);
   --color-accent-orange-hover: var(--accent-orange-hover);
@@ -73,14 +73,14 @@
   --color-accent-rose: var(--accent-rose);
   --color-accent-violet: var(--accent-violet);
   --color-accent-sky: var(--accent-sky);
-  
+
   /* Glass */
   --color-glass: var(--glass-bg);
   --color-glass-hover: var(--glass-bg-hover);
   --color-glass-active: var(--glass-bg-active);
   --color-glass-border: var(--glass-border);
   --color-glass-border-hover: var(--glass-border-hover);
-  
+
   /* Fuentes */
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -98,6 +98,7 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
@@ -105,6 +106,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
   min-height: 100vh;
+  overflow: hidden;
+  /* 👈 CLAVE */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -117,7 +120,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
+  background:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.15), transparent),
     radial-gradient(ellipse 50% 80% at 80% 50%, rgba(139, 92, 246, 0.08), transparent),
     radial-gradient(ellipse 50% 80% at 20% 80%, rgba(16, 185, 129, 0.08), transparent);
@@ -196,6 +199,7 @@ body::before {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -207,6 +211,7 @@ body::before {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -214,9 +219,12 @@ body::before {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 5px var(--accent-orange);
   }
+
   50% {
     box-shadow: 0 0 20px var(--accent-orange), 0 0 30px var(--accent-orange);
   }
@@ -255,12 +263,10 @@ body::before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
   animation: shimmer 2s infinite;
 }
 
@@ -279,10 +285,19 @@ body::before {
 /* Divider glass */
 .divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--glass-border),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--glass-border),
+      transparent);
+}
+
+/* ===========================================
+   APP SHELL PARA PWA
+   =========================================== */
+
+.app-shell {
+  height: 100dvh;
+  /* viewport dinámico real */
+  display: flex;
+  flex-direction: column;
 }
