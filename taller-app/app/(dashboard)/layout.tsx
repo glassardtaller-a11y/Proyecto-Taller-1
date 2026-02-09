@@ -26,7 +26,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="h-full bg-background flex flex-col">
+        <div className="app-shell bg-background">
             <div className="hidden lg:block">
                 <Sidebar
                     collapsed={sidebarCollapsed}
