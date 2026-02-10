@@ -339,7 +339,7 @@ export default function PagosPage() {
             </Card>
 
             {/* Recent Movements */}
-            <Card padding="none">
+            <Card padding="none" className="mb-32">
                 <CardHeader className="px-6 pt-6">
                     <CardTitle>Movimientos Recientes</CardTitle>
                 </CardHeader>
