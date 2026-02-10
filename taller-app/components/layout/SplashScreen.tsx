@@ -2,16 +2,14 @@
 
 export default function SplashScreen() {
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black overflow-hidden">
 
-            {/* FOTO */}
-            <div className="w-28 h-28 rounded-full overflow-hidden border border-white/20 shadow-xl">
-                <img
-                    src="/splash/miguel.png"
-                    alt="Miguel Merino"
-                    className="w-full h-full object-cover"
-                />
-            </div>
+            <img
+                src="/splash/miguel.png"
+                alt="Miguel Merino"
+                className="w-48 max-w-[70vw] mb-8 object-contain"
+            />
+
             <h1 className="splash-text">
                 Miguel Merino
             </h1>
@@ -19,9 +17,9 @@ export default function SplashScreen() {
             <style jsx>{`
         .splash-text {
           position: relative;
-          font-size: 2rem;
-          font-weight: 600;
-          letter-spacing: 0.15em;
+          font-size: 2.2rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
           color: #ffffff;
           text-transform: uppercase;
         }

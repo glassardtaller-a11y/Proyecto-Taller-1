@@ -17,7 +17,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         setIsMounted(true);
-        const timer = setTimeout(() => setShowSplash(false), 900);
+        const timer = setTimeout(() => setShowSplash(false), 1600);
         return () => clearTimeout(timer);
     }, []);
 
