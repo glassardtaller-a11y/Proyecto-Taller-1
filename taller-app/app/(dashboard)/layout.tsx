@@ -42,7 +42,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             </MobileSidebar>
 
             <div
-                className="transition-all duration-300 pb-20 lg:pb-0 flex flex-col flex-1 overflow-hidden"
+                className="transition-all duration-300 flex flex-col flex-1 min-h-0"
                 style={{ marginLeft: getMainMargin() }}
             >
                 <Header
