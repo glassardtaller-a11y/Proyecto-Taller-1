@@ -52,12 +52,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 />
 
                 <main
-                    className="
-                        flex-1
-                        overflow-y-auto
-                        p-4 lg:p-6
-                        pb-[calc(4rem+env(safe-area-inset-bottom))]
-                    "
+                    className="overflow-y-auto p-4 lg:p-6"
+                    style={{
+                        height: 'calc(100dvh - 64px - 64px)'
+                    }}
                 >
                     {children}
                 </main>
