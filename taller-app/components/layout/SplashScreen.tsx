@@ -4,6 +4,14 @@ export default function SplashScreen() {
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden">
 
+            {/* FOTO */}
+            <div className="w-28 h-28 rounded-full overflow-hidden border border-white/20 shadow-xl">
+                <img
+                    src="/splash/miguel.png"
+                    alt="Miguel Merino"
+                    className="w-full h-full object-cover"
+                />
+            </div>
             <h1 className="splash-text">
                 Miguel Merino
             </h1>
