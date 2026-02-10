@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import SplashScreen from '@/components/layout/SplashScreen';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
 import { MobileNav, MobileSidebar } from '@/components/layout/MobileNav';
@@ -9,12 +10,15 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import { ProtectedRoute } from '@/components/providers/ProtectedRoute';
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
+    const [showSplash, setShowSplash] = useState(true);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
+        const timer = setTimeout(() => setShowSplash(false), 900);
+        return () => clearTimeout(timer);
     }, []);
 
     const getMainMargin = () => {
@@ -24,6 +28,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         }
         return '0';
     };
+
+    if (showSplash) {
+        return <SplashScreen />;
+    }
 
     return (
         <div className="app-shell bg-background flex flex-col">
@@ -54,7 +62,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 <main
                     className="overflow-y-auto p-4 lg:p-6"
                     style={{
-                        height: 'calc(100dvh - 64px - 64px)'
+                        height: 'calc(100dvh - 64px - 64px - 32px)'
                     }}
                 >
                     {children}
