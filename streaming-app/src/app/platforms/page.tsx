@@ -6,7 +6,11 @@ import { formatCurrency } from '@/lib/date-utils'
 
 export default async function PlatformsPage() {
     const supabase = await createClient()
-    const { data: platforms } = await supabase.from('platforms').select('*').order('name')
+    const { data: platforms } = await supabase
+        .from('platforms')
+        .select('id, name, monthly_price, yearly_price, logo_url, is_active')
+        .order('name')
+
 
     return (
         <div className="space-y-6">
@@ -26,6 +30,13 @@ export default async function PlatformsPage() {
                     <div key={platform.id} className="overflow-hidden rounded-lg bg-white shadow">
                         <div className="p-6">
                             <div className="flex items-center">
+                                {platform.logo_url && (
+                                    <img
+                                        src={platform.logo_url}
+                                        alt={platform.name}
+                                        className="w-14 h-14 rounded-md object-contain border"
+                                    />
+                                )}
                                 <div className="flex-1">
                                     <h3 className="text-lg font-medium text-gray-900">{platform.name}</h3>
                                     <p className="text-sm text-gray-500">

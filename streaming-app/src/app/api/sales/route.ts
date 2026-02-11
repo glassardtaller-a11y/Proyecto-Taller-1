@@ -35,32 +35,45 @@ export async function POST(request: Request) {
     const supabase = await createClient()
     const body = await request.json()
 
-    // 1. Create or get customer
     let customerId = body.customer_id
 
     if (!customerId && body.customer) {
-        // Check if customer exists by email or phone
-        const { data: existingCustomer } = await supabase
+
+        let customerQuery = supabase
             .from('customers')
             .select('id')
-            .or(`email.eq.${body.customer.email},phone.eq.${body.customer.phone}`)
-            .maybeSingle()
+
+        if (body.customer.email) {
+            customerQuery = customerQuery.eq('email', body.customer.email)
+        } else if (body.customer.phone) {
+            customerQuery = customerQuery.eq('phone', body.customer.phone)
+        } else {
+            customerQuery = customerQuery.eq('full_name', body.customer.full_name)
+        }
+
+        const { data: existingCustomer } = await customerQuery.maybeSingle()
 
         if (existingCustomer) {
             customerId = existingCustomer.id
         } else {
             const { data: newCustomer, error: customerError } = await supabase
                 .from('customers')
-                .insert(body.customer)
+                .insert({
+                    full_name: body.customer.full_name,
+                    email: body.customer.email,
+                    phone: body.customer.phone,
+                })
                 .select()
                 .single()
 
             if (customerError) {
                 return NextResponse.json({ error: customerError.message }, { status: 500 })
             }
+
             customerId = newCustomer.id
         }
     }
+
 
     // 2. Create Sale
     const nextChargeDate = calculateNextChargeDate(body.start_date, body.plan, body.end_date)
