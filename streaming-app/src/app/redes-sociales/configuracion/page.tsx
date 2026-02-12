@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { SocialNetworkLogoUpload } from '@/components/SocialNetworkLogoUpload'
+import { CategoriesManager } from '@/components/social/CategoriesManager'
 
 export default function SocialNetworksConfigPage() {
 
@@ -71,6 +72,10 @@ export default function SocialNetworksConfigPage() {
             >
                 {loading ? 'Guardando...' : 'Guardar Red'}
             </button>
+
+            <hr />
+
+            <CategoriesManager />
 
         </div>
     )

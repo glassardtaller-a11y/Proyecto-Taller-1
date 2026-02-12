@@ -11,6 +11,8 @@ interface Props {
 export function SocialNetworkLogoUpload({ onUpload }: Props) {
 
     const [uploading, setUploading] = useState(false)
+    const [uploaded, setUploaded] = useState(false)
+
 
     const MAX_SIZE_MB = 2
     const ALLOWED_TYPES = [
@@ -60,6 +62,8 @@ export function SocialNetworkLogoUpload({ onUpload }: Props) {
                 .getPublicUrl(fileName)
 
             onUpload(data.publicUrl)
+            setUploaded(true)
+
 
         } catch (error: any) {
             alert(error.message || 'Error al subir imagen')
@@ -99,6 +103,13 @@ export function SocialNetworkLogoUpload({ onUpload }: Props) {
             <p className="text-xs text-gray-500">
                 PNG, JPG, WEBP, SVG | Máx 2MB
             </p>
+
+            {uploaded && (
+                <p className="text-sm text-green-600">
+                    Imagen cargada correctamente ✔
+                </p>
+            )}
+
         </div>
     )
 }
