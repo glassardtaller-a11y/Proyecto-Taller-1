@@ -263,6 +263,7 @@ export default function NuevaOrdenPage() {
                             <th className="p-2">Red</th>
                             <th className="p-2">Categoría</th>
                             <th className="p-2">Servicio</th>
+                            <th className="p-2">Link</th>
                             <th className="p-2">Cantidad</th>
                             <th className="p-2">Precio</th>
                             <th className="p-2">Estado</th>
@@ -275,9 +276,41 @@ export default function NuevaOrdenPage() {
                                 <td className="p-2">{o.social_networks?.name}</td>
                                 <td className="p-2">{o.social_categories?.name}</td>
                                 <td className="p-2">{o.social_services?.name}</td>
+                                <td className="p-2">
+                                    <a
+                                        href={o.client_link}
+                                        target="_blank"
+                                        className="text-blue-600 underline"
+                                    >
+                                        Abrir
+                                    </a>
+                                </td>
                                 <td className="p-2">{o.quantity}</td>
                                 <td className="p-2">S/ {o.price}</td>
-                                <td className="p-2">{o.status}</td>
+                                <td className="p-2">
+                                    <select
+                                        value={o.status}
+                                        onChange={async (e) => {
+
+                                            await supabase
+                                                .from('social_orders')
+                                                .update({ status: e.target.value })
+                                                .eq('id', o.id)
+
+                                            loadOrders()
+                                        }}
+                                        className={`border rounded px-2 py-1
+                                            ${o.status === 'completed' && 'bg-green-100'}
+                                            ${o.status === 'processing' && 'bg-yellow-100'}
+                                            ${o.status === 'pending' && 'bg-red-100'}
+                                        `}
+                                    >
+                                        <option value="pending">Pendiente</option>
+                                        <option value="processing">Procesando</option>
+                                        <option value="completed">Completado</option>
+                                    </select>
+                                </td>
+
                             </tr>
                         ))}
                     </tbody>
