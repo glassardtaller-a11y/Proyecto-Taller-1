@@ -1,15 +1,272 @@
 'use client'
 
-export default function NuevaOrdenSocialPage() {
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+export default function NuevaOrdenPage() {
+
+    const supabase = createClient()
+
+    const [networks, setNetworks] = useState<any[]>([])
+    const [categories, setCategories] = useState<any[]>([])
+    const [services, setServices] = useState<any[]>([])
+    const [prices, setPrices] = useState<any[]>([])
+    const [orders, setOrders] = useState<any[]>([])
+
+    const [networkId, setNetworkId] = useState('')
+    const [categoryId, setCategoryId] = useState('')
+    const [serviceId, setServiceId] = useState('')
+    const [link, setLink] = useState('')
+    const [quantity, setQuantity] = useState('')
+    const [price, setPrice] = useState('')
+    const [manualPrice, setManualPrice] = useState(false)
+
+    /* ================= LOADERS ================= */
+
+    useEffect(() => {
+        loadNetworks()
+        loadOrders()
+    }, [])
+
+    const loadNetworks = async () => {
+        const { data } = await supabase
+            .from('social_networks')
+            .select('*')
+            .eq('active', true)
+
+        setNetworks(data || [])
+    }
+
+    const loadCategories = async (id: string) => {
+        const { data } = await supabase
+            .from('social_categories')
+            .select('*')
+            .eq('network_id', id)
+
+        setCategories(data || [])
+    }
+
+    const loadServices = async (id: string) => {
+        const { data } = await supabase
+            .from('social_services')
+            .select('*')
+            .eq('category_id', id)
+
+        setServices(data || [])
+    }
+
+    const loadPrices = async (id: string) => {
+        const { data } = await supabase
+            .from('social_service_prices')
+            .select('*')
+            .eq('service_id', id)
+
+        setPrices(data || [])
+    }
+
+    const loadOrders = async () => {
+        const { data } = await supabase
+            .from('social_orders')
+            .select(`
+        *,
+        social_networks(name),
+        social_categories(name),
+        social_services(name)
+      `)
+            .order('created_at', { ascending: false })
+
+        setOrders(data || [])
+    }
+
+    /* ================= LOGIC ================= */
+
+    const handleQuantity = (value: string) => {
+        setQuantity(value)
+
+        const found = prices.find(
+            p => p.quantity === Number(value)
+        )
+
+        if (found) {
+            setPrice(found.price)
+            setManualPrice(false)
+        } else {
+            setPrice('')
+            setManualPrice(true)
+        }
+    }
+
+    const saveOrder = async () => {
+
+        if (
+            !networkId ||
+            !categoryId ||
+            !serviceId ||
+            !link ||
+            !quantity ||
+            !price
+        ) {
+            alert('Complete todos los campos')
+            return
+        }
+
+        await supabase.from('social_orders').insert({
+            network_id: networkId,
+            category_id: categoryId,
+            service_id: serviceId,
+            client_link: link,
+            quantity: Number(quantity),
+            price: Number(price)
+        })
+
+        alert('Orden registrada')
+
+        setLink('')
+        setQuantity('')
+        setPrice('')
+
+        loadOrders()
+    }
+
+    /* ================= UI ================= */
+
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold">
+        <div className="max-w-4xl space-y-8">
+
+            <h1 className="text-2xl font-bold text-white">
                 Nueva Orden - Redes Sociales
             </h1>
 
-            <p className="text-gray-500 mt-2">
-                Aquí se crearán las órdenes de redes sociales.
-            </p>
+            {/* FORM */}
+            <div className="bg-white text-gray-900 p-6 rounded-lg shadow space-y-4">
+
+                <select
+                    className="w-full border px-3 py-2 rounded"
+                    value={networkId}
+                    onChange={(e) => {
+                        setNetworkId(e.target.value)
+                        loadCategories(e.target.value)
+                        setCategoryId('')
+                        setServiceId('')
+                    }}
+                >
+                    <option value="">Seleccione Red</option>
+                    {networks.map(n => (
+                        <option key={n.id} value={n.id}>
+                            {n.name}
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    className="w-full border px-3 py-2 rounded"
+                    value={categoryId}
+                    onChange={(e) => {
+                        setCategoryId(e.target.value)
+                        loadServices(e.target.value)
+                        setServiceId('')
+                    }}
+                >
+                    <option value="">Seleccione Categoría</option>
+                    {categories.map(c => (
+                        <option key={c.id} value={c.id}>
+                            {c.name}
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    className="w-full border px-3 py-2 rounded"
+                    value={serviceId}
+                    onChange={(e) => {
+                        setServiceId(e.target.value)
+                        loadPrices(e.target.value)
+                    }}
+                >
+                    <option value="">Seleccione Servicio</option>
+                    {services.map(s => (
+                        <option key={s.id} value={s.id}>
+                            {s.name}
+                        </option>
+                    ))}
+                </select>
+
+                <input
+                    className="w-full border px-3 py-2 rounded"
+                    placeholder="Link del perfil o publicación"
+                    value={link}
+                    onChange={e => setLink(e.target.value)}
+                />
+
+                <input
+                    type="number"
+                    className="w-full border px-3 py-2 rounded"
+                    placeholder="Cantidad"
+                    value={quantity}
+                    onChange={e => handleQuantity(e.target.value)}
+                />
+
+                <input
+                    type="number"
+                    className="w-full border px-3 py-2 rounded"
+                    placeholder={manualPrice ? 'Ingrese precio manual' : 'Precio automático'}
+                    value={price}
+                    onChange={e => setPrice(e.target.value)}
+                    disabled={!manualPrice}
+                />
+
+                {manualPrice && (
+                    <p className="text-yellow-600 text-sm">
+                        No existe tarifa para esta cantidad. Ingrese precio manual.
+                    </p>
+                )}
+
+                <button
+                    onClick={saveOrder}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                >
+                    Guardar Orden
+                </button>
+
+            </div>
+
+            {/* TABLE */}
+            <div className="bg-white text-gray-900 p-6 rounded-lg shadow">
+
+                <h2 className="text-xl font-bold mb-3">
+                    Órdenes Registradas
+                </h2>
+
+                <table className="w-full text-sm border">
+
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="p-2">Red</th>
+                            <th className="p-2">Categoría</th>
+                            <th className="p-2">Servicio</th>
+                            <th className="p-2">Cantidad</th>
+                            <th className="p-2">Precio</th>
+                            <th className="p-2">Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {orders.map(o => (
+                            <tr key={o.id} className="border-t">
+                                <td className="p-2">{o.social_networks?.name}</td>
+                                <td className="p-2">{o.social_categories?.name}</td>
+                                <td className="p-2">{o.social_services?.name}</td>
+                                <td className="p-2">{o.quantity}</td>
+                                <td className="p-2">S/ {o.price}</td>
+                                <td className="p-2">{o.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
     )
 }

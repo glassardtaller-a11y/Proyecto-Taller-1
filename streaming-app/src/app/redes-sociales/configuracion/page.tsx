@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { SocialNetworkLogoUpload } from '@/components/SocialNetworkLogoUpload'
 import { CategoriesManager } from '@/components/social/CategoriesManager'
 import { ServicesManager } from '@/components/social/ServicesManager'
+import { PricesManager } from '@/components/social/PricesManager'
+
 
 
 export default function SocialNetworksConfigPage() {
@@ -86,6 +88,11 @@ export default function SocialNetworksConfigPage() {
             <div className="bg-white p-6 rounded-lg shadow">
                 <ServicesManager />
             </div>
+
+            <div className="bg-white p-6 rounded-lg shadow">
+                <PricesManager />
+            </div>
+
 
         </div>
     )
