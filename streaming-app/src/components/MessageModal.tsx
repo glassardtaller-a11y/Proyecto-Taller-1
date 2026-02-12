@@ -25,7 +25,9 @@ ${pin ? `🔑 PIN: ${pin}` : ''}
 🗓 Vencimiento: ${sale.next_charge_date?.slice(0, 10)}
 
 ⚠️ Condiciones de uso:
-El servicio es exclusivo para un solo dispositivo.
+El servicio es exclusivo para un solo dispositivo. (Celular, Tablet, Smart Tv, Laptop, Pc, etc.)
+Se Quita el acceso si conectas más de 1 dispositivo ( sea o no a la vez ).
+No editar, ni eliminar los perfiles. (Preguntar primero)
 No se permite uso simultáneo.
 Ante uso indebido la cuenta podrá ser suspendida sin previo aviso.
 En caso de inconveniente se atenderá entre 1 a 24 horas.
