@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { SocialNetworkLogoUpload } from '@/components/SocialNetworkLogoUpload'
 import { CategoriesManager } from '@/components/social/CategoriesManager'
+import { ServicesManager } from '@/components/social/ServicesManager'
+
 
 export default function SocialNetworksConfigPage() {
 
@@ -40,43 +42,52 @@ export default function SocialNetworksConfigPage() {
     }
 
     return (
-        <div className="max-w-xl space-y-6">
+        <div className="max-w-4xl space-y-10">
 
-            <h1 className="text-2xl font-bold">
-                Configuración - Redes Sociales
-            </h1>
+            <div className="bg-white p-6 rounded-lg shadow">
 
-            {/* NOMBRE */}
-            <div>
-                <label className="block text-sm font-medium">
-                    Nombre de la Red
-                </label>
-                <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full border rounded-md px-3 py-2"
-                    placeholder="Ej: TikTok"
-                />
+                <h1 className="text-2xl font-bold mb-4">
+                    Redes Sociales
+                </h1>
+
+                <div className="space-y-4">
+
+                    <div>
+                        <label className="block text-sm font-medium">
+                            Nombre de la Red
+                        </label>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full border rounded-md px-3 py-2"
+                            placeholder="Ej: TikTok"
+                        />
+                    </div>
+
+                    <SocialNetworkLogoUpload
+                        onUpload={(url) => setLogoUrl(url)}
+                    />
+
+                    <button
+                        onClick={handleSave}
+                        disabled={loading}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        {loading ? 'Guardando...' : 'Guardar Red'}
+                    </button>
+
+                </div>
             </div>
 
-            {/* LOGO */}
-            <SocialNetworkLogoUpload
-                onUpload={(url) => setLogoUrl(url)}
-            />
+            <div className="bg-white p-6 rounded-lg shadow">
+                <CategoriesManager />
+            </div>
 
-            {/* BOTÓN */}
-            <button
-                onClick={handleSave}
-                disabled={loading}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-            >
-                {loading ? 'Guardando...' : 'Guardar Red'}
-            </button>
-
-            <hr />
-
-            <CategoriesManager />
+            <div className="bg-white p-6 rounded-lg shadow">
+                <ServicesManager />
+            </div>
 
         </div>
     )
+
 }
