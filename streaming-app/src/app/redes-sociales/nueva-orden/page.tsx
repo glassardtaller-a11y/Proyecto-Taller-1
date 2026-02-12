@@ -140,23 +140,42 @@ export default function NuevaOrdenPage() {
             {/* FORM */}
             <div className="bg-white text-gray-900 p-6 rounded-lg shadow space-y-4">
 
-                <select
-                    className="w-full border px-3 py-2 rounded"
-                    value={networkId}
-                    onChange={(e) => {
-                        setNetworkId(e.target.value)
-                        loadCategories(e.target.value)
-                        setCategoryId('')
-                        setServiceId('')
-                    }}
-                >
-                    <option value="">Seleccione Red</option>
-                    {networks.map(n => (
-                        <option key={n.id} value={n.id}>
-                            {n.name}
-                        </option>
-                    ))}
-                </select>
+                {/* REDES CON LOGO */}
+                <div>
+                    <p className="font-semibold mb-2">Seleccione Red</p>
+
+                    <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
+
+                        {networks.map((n) => (
+                            <button
+                                key={n.id}
+                                onClick={() => {
+                                    setNetworkId(n.id)
+                                    loadCategories(n.id)
+                                    setCategoryId('')
+                                    setServiceId('')
+                                }}
+                                className={`
+                                    border rounded-lg p-3 flex flex-col items-center justify-center
+                                    hover:border-blue-500 transition
+                                    ${networkId === n.id ? 'border-blue-600 ring-2 ring-blue-400' : 'border-gray-300'}
+                                    `}
+                            >
+                                <img
+                                    src={n.logo_url}
+                                    alt={n.name}
+                                    className="w-12 h-12 object-contain mb-2"
+                                />
+
+                                <span className="text-sm font-medium">
+                                    {n.name}
+                                </span>
+                            </button>
+                        ))}
+
+                    </div>
+                </div>
+
 
                 <select
                     className="w-full border px-3 py-2 rounded"
