@@ -288,39 +288,27 @@ export default function NuevaOrdenPage() {
                                 <td className="p-2">{o.quantity}</td>
                                 <td className="p-2">S/ {o.price}</td>
                                 <td className="p-2">
-                                    <div className="flex items-center gap-2">
+                                    <select
+                                        value={o.status}
+                                        onChange={async (e) => {
 
-                                        <span
-                                            className={`px-2 py-1 rounded text-xs font-semibold
-                                                ${o.status === 'completed' ? 'bg-green-100 text-green-800' : ''}
-                                                ${o.status === 'processing' ? 'bg-yellow-100 text-yellow-800' : ''}
-                                                ${o.status === 'pending' ? 'bg-red-100 text-red-800' : ''}
-                                            `}
-                                        >
-                                            {o.status === 'completed' && 'Completado'}
-                                            {o.status === 'processing' && 'Procesando'}
-                                            {o.status === 'pending' && 'Pendiente'}
-                                        </span>
+                                            await supabase
+                                                .from('social_orders')
+                                                .update({ status: e.target.value })
+                                                .eq('id', o.id)
 
-                                        <select
-                                            value={o.status}
-                                            onChange={async (e) => {
-
-                                                await supabase
-                                                    .from('social_orders')
-                                                    .update({ status: e.target.value })
-                                                    .eq('id', o.id)
-
-                                                loadOrders()
-                                            }}
-                                            className="border rounded px-2 py-1 text-sm"
-                                        >
-                                            <option value="pending">Pendiente</option>
-                                            <option value="processing">Procesando</option>
-                                            <option value="completed">Completado</option>
-                                        </select>
-
-                                    </div>
+                                            loadOrders()
+                                        }}
+                                        className={`border rounded px-2 py-1 text-sm font-semibold
+                                            ${o.status === 'completed' ? 'bg-green-100 text-green-800' : ''}
+                                            ${o.status === 'processing' ? 'bg-yellow-100 text-yellow-800' : ''}
+                                            ${o.status === 'pending' ? 'bg-red-100 text-red-800' : ''}
+                                        `}
+                                    >
+                                        <option value="pending">Pendiente</option>
+                                        <option value="processing">Procesando</option>
+                                        <option value="completed">Completado</option>
+                                    </select>
 
                                 </td>
                             </tr>
